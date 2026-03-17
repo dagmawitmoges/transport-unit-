@@ -4,6 +4,8 @@ import { ProtectedRoute } from './auth/protectedRoute';
 import { RoleRoute } from './auth/roleRoute';
 import { Login } from './pages/login';
 import { Unauthorized } from './pages/unauthorized';
+import { AdminDashboard } from './pages/admin/dashboard';
+import { CreateUser } from './pages/admin/createUser';
 // import { AdminDashboard } from './pages/admin/Dashboard';
 // import { Users } from './pages/admin/Users';
 // import { CreateUser } from './pages/admin/CreateUser';
@@ -33,7 +35,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
+          {/* <Route
             path="/admin/users"
             element={
               <ProtectedRoute>
@@ -42,7 +44,7 @@ function App() {
                 </RoleRoute>
               </ProtectedRoute>
             }
-          />
+          /> */}
           <Route
             path="/admin/users/create"
             element={
@@ -53,7 +55,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
+          {/* <Route
             path="/admin/reports"
             element={
               <ProtectedRoute>
@@ -62,8 +64,8 @@ function App() {
                 </RoleRoute>
               </ProtectedRoute>
             }
-          />
-          <Route
+          /> */}
+          {/* <Route
             path="/admin/roles"
             element={
               <ProtectedRoute>
@@ -72,8 +74,8 @@ function App() {
                 </RoleRoute>
               </ProtectedRoute>
             }
-          />
-          <Route
+          /> */}
+          {/* <Route
             path="/admin/departments"
             element={
               <ProtectedRoute>
@@ -82,9 +84,9 @@ function App() {
                 </RoleRoute>
               </ProtectedRoute>
             }
-          />
+          /> */}
 
-          <Route
+          {/* <Route
             path="/staff/dashboard"
             element={
               <ProtectedRoute>
@@ -93,8 +95,8 @@ function App() {
                 </RoleRoute>
               </ProtectedRoute>
             }
-          />
-          <Route
+          /> */}
+          {/* <Route
             path="/staff/request-transport"
             element={
               <ProtectedRoute>
@@ -103,8 +105,8 @@ function App() {
                 </RoleRoute>
               </ProtectedRoute>
             }
-          />
-          <Route
+          /> */}
+          {/* <Route
             path="/staff/my-requests"
             element={
               <ProtectedRoute>
@@ -113,8 +115,8 @@ function App() {
                 </RoleRoute>
               </ProtectedRoute>
             }
-          />
-          <Route
+          /> */}
+          {/* <Route
             path="/staff/profile"
             element={
               <ProtectedRoute>
@@ -123,7 +125,7 @@ function App() {
                 </RoleRoute>
               </ProtectedRoute>
             }
-          />
+          /> */}
 
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
