@@ -50,14 +50,14 @@ export const Login = () => {
   }};
 
    return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-8">
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl mb-4 shadow-lg">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl mb-4 shadow-lg">
               <LogIn className="text-white" size={32} />
             </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-2">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent mb-2">
               Transport MS
             </h1>
             <p className="text-gray-600">Sign in to your account</p>
@@ -93,7 +93,7 @@ export const Login = () => {
             </Button>
           </form>
 
-          <div className="mt-6 p-4 bg-blue-50/50 rounded-xl">
+          <div className="mt-6 p-4 bg-green-50/50 rounded-xl">
             <p className="text-xs text-gray-600 font-semibold mb-2">Demo Accounts:</p>
             <p className="text-xs text-gray-600">Admin: admin@au.int</p>
             <p className="text-xs text-gray-600">Dispatcher: dispatcher@au.int</p>
