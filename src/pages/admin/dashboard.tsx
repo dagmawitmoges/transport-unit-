@@ -2,30 +2,8 @@ import { useEffect, useState } from 'react';
 import { AdminLayout } from '../../layout/adminLayout';
 import { getUsers, getTransportRequests } from '../../api/admin';
 import { Users, FileText, UserCheck, UserX, Loader2 } from 'lucide-react';
-
-interface StatCardProps {
-  label: string;
-  value: number | string;
-  icon: React.ReactNode;
-  color: string;
-  loading: boolean;
-}
-
-const StatCard = ({ label, value, icon, color, loading }: StatCardProps) => (
-  <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-center gap-5">
-    <div className={`flex items-center justify-center w-12 h-12 rounded-xl ${color}`}>
-      {icon}
-    </div>
-    <div>
-      <p className="text-sm text-gray-500 font-medium">{label}</p>
-      {loading ? (
-        <Loader2 size={20} className="animate-spin text-gray-400 mt-1" />
-      ) : (
-        <p className="text-2xl font-bold text-gray-800">{value}</p>
-      )}
-    </div>
-  </div>
-);
+import { StatCard } from '../../components/statCard';
+import { StatusBadge } from '../../components/StatusBadge';
 
 export const AdminDashboard = () => {
   const [users, setUsers] = useState<any[]>([]);
@@ -40,8 +18,6 @@ export const AdminDashboard = () => {
           getUsers(),
           getTransportRequests(),
         ]);
-
-        // Handle both array responses and paginated { data: [] } responses
         setUsers(Array.isArray(usersData) ? usersData : usersData.data ?? []);
         setRequests(Array.isArray(requestsData) ? requestsData : requestsData.data ?? []);
       } catch (err: any) {
@@ -51,132 +27,156 @@ export const AdminDashboard = () => {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
   const activeUsers   = users.filter((u) => u.active !== false).length;
   const inactiveUsers = users.filter((u) => u.active === false).length;
 
-  const stats = [
-    {
-      label: 'Total Users',
-      value: users.length,
-      icon: <Users size={22} className="text-blue-600" />,
-      color: 'bg-blue-50',
-    },
-    {
-      label: 'Transport Requests',
-      value: requests.length,
-      icon: <FileText size={22} className="text-purple-600" />,
-      color: 'bg-purple-50',
-    },
-    {
-      label: 'Active Users',
-      value: activeUsers,
-      icon: <UserCheck size={22} className="text-green-600" />,
-      color: 'bg-green-50',
-    },
-    {
-      label: 'Inactive Users',
-      value: inactiveUsers,
-      icon: <UserX size={22} className="text-red-500" />,
-      color: 'bg-red-50',
-    },
-  ];
-
   return (
-    <AdminLayout>
-      <div className="space-y-6">
-        {/* Header */}
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800">Dashboard</h2>
-          <p className="text-sm text-gray-500 mt-1">Overview of your transport system</p>
-        </div>
+  <AdminLayout>
+    <div className="p-6 space-y-6">
+      
+      {/* 🔝 HEADER */}
+      <div>
+        <p className="text-sm text-gray-400">Overview</p>
+        <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
+      </div>
 
-        {/* Error */}
-        {error && (
-          <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm">
-            {error}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* LEFT */}
+        <div className="lg:col-span-2 space-y-6">
+
+          {/* 🌿 WELCOME CARD */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h2 className="text-xl font-semibold text-gray-800">
+              Welcome back, Admin 👋
+            </h2>
+            <p className="text-sm text-gray-500 mt-1">
+              Here’s what’s happening in your transport system today.
+            </p>
           </div>
-        )}
 
-        {/* Stat Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {stats.map((stat) => (
-            <StatCard key={stat.label} {...stat} loading={loading} />
-          ))}
-        </div>
-
-        {/* Recent Requests Table */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
-          <div className="px-6 py-4 border-b border-gray-100">
-            <h3 className="font-semibold text-gray-700">Recent Transport Requests</h3>
+          {/* 🌿 ACTION CARD */}
+          <div className="bg-gradient-to-r from-[#1f5c52] to-[#2f7d70] text-white rounded-2xl p-6 shadow">
+            <h3 className="text-lg font-semibold">Quick Action</h3>
+            <p className="mt-2 text-sm opacity-90">
+              Review and approve pending transport requests
+            </p>
+            <button className="mt-4 bg-white text-[#1f5c52] px-4 py-2 rounded-lg text-sm font-medium">
+              Go to Requests
+            </button>
           </div>
-          {loading ? (
-            <div className="flex items-center justify-center py-16">
-              <Loader2 size={28} className="animate-spin text-blue-500" />
+
+          {/* 🌿 TABLE */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
+            
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+              <h3 className="font-semibold text-gray-700">
+                Recent Transport Requests
+              </h3>
+              <span className="text-xs text-gray-400">
+                Showing latest {requests.length}
+              </span>
             </div>
-          ) : requests.length === 0 ? (
-            <div className="text-center py-16 text-gray-400 text-sm">
-              No transport requests found.
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
-                  <tr>
-                    <th className="px-6 py-3 text-left font-medium">ID</th>
-                    <th className="px-6 py-3 text-left font-medium">Destination</th>
-                    <th className="px-6 py-3 text-left font-medium">Purpose</th>
-                    <th className="px-6 py-3 text-left font-medium">Status</th>
-                    <th className="px-6 py-3 text-left font-medium">Date</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {requests.slice(0, 8).map((req: any) => (
-                    <tr key={req.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 text-gray-500">#{req.id}</td>
-                      <td className="px-6 py-4 text-gray-800 font-medium">
-                        {req.destination ?? '—'}
-                      </td>
-                      <td className="px-6 py-4 text-gray-500 max-w-xs truncate">
-                        {req.purpose ?? '—'}
-                      </td>
-                      <td className="px-6 py-4">
-                        <StatusBadge status={req.status} />
-                      </td>
-                      <td className="px-6 py-4 text-gray-500">
-                        {req.required_date ?? req.created_at?.split('T')[0] ?? '—'}
-                      </td>
+
+            {loading ? (
+              <div className="flex items-center justify-center py-16">
+                <Loader2 size={28} className="animate-spin text-[#1f5c52]" />
+              </div>
+            ) : requests.length === 0 ? (
+              <div className="text-center py-16 text-gray-400 text-sm">
+                No transport requests found.
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  
+                  <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
+                    <tr>
+                      <th className="px-6 py-3 text-left">ID</th>
+                      <th className="px-6 py-3 text-left">Destination</th>
+                      <th className="px-6 py-3 text-left">Purpose</th>
+                      <th className="px-6 py-3 text-left">Status</th>
+                      <th className="px-6 py-3 text-left">Date</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+
+                  <tbody className="divide-y divide-gray-100">
+                    {requests.slice(0, 6).map((req: any) => (
+                      <tr
+                        key={req.id}
+                        className="hover:bg-gray-50 transition"
+                      >
+                        <td className="px-6 py-4 text-gray-400">
+                          #{req.id}
+                        </td>
+
+                        <td className="px-6 py-4 font-medium text-gray-800">
+                          {req.destination ?? '—'}
+                        </td>
+
+                        <td className="px-6 py-4 text-gray-500 truncate max-w-xs">
+                          {req.purpose ?? '—'}
+                        </td>
+
+                        <td className="px-6 py-4">
+                          <StatusBadge status={req.status} />
+                        </td>
+
+                        <td className="px-6 py-4 text-gray-400">
+                          {req.required_date ??
+                            req.created_at?.split('T')[0] ??
+                            '—'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* RIGHT (STATS) */}
+        <div className="space-y-4">
+          
+          <StatCard
+            label="Total Users"
+            value={users.length}
+            icon={<Users size={20} className="text-[#1f5c52]" />}
+            color="bg-[#e6f4f1]"
+            loading={loading}
+          />
+
+          <StatCard
+            label="Requests"
+            value={requests.length}
+            icon={<FileText size={20} className="text-[#2f7d70]" />}
+            color="bg-[#eaf7f4]"
+            loading={loading}
+          />
+
+          <StatCard
+            label="Active Users"
+            value={activeUsers}
+            icon={<UserCheck size={20} className="text-green-600" />}
+            color="bg-green-50"
+            loading={loading}
+          />
+
+          <StatCard
+            label="Inactive Users"
+            value={inactiveUsers}
+            icon={<UserX size={20} className="text-red-500" />}
+            color="bg-red-50"
+            loading={loading}
+          />
+
         </div>
       </div>
-    </AdminLayout>
-  );
-};
-
-const statusColors: Record<string, string> = {
-  pending:   'bg-yellow-100 text-yellow-700',
-  approved:  'bg-green-100 text-green-700',
-  rejected:  'bg-red-100 text-red-700',
-  assigned:  'bg-blue-100 text-blue-700',
-  completed: 'bg-gray-100 text-gray-600',
-  cancelled: 'bg-red-50 text-red-400',
-};
-
-const StatusBadge = ({ status }: { status: string }) => (
-  <span
-    className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${
-      statusColors[status] ?? 'bg-gray-100 text-gray-500'
-    }`}
-  >
-    {status ?? 'unknown'}
-  </span>
-);
-console.log('TOKEN:', localStorage.getItem('token'));
+    </div>
+  </AdminLayout>
+);}

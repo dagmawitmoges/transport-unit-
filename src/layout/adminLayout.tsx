@@ -14,9 +14,9 @@ import {
 
 const navItems = [
   { label: 'Dashboard', to: '/admin/dashboard', icon: LayoutDashboard },
-  { label: 'Users',     to: '/admin/users',     icon: Users },
-  { label: 'Vehicles',  to: '/admin/vehicles',  icon: Car },
-  { label: 'Requests',  to: '/admin/requests',  icon: FileText },
+  { label: 'Users', to: '/admin/users', icon: Users },
+  { label: 'Vehicles', to: '/admin/vehicles', icon: Car },
+  { label: 'Requests', to: '/admin/requests', icon: FileText },
 ];
 
 export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
@@ -30,81 +30,110 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
-      {/* Sidebar */}
+    <div className="flex h-screen bg-[#f6f9f8] overflow-hidden">
+      
+      {/* 🌿 SIDEBAR */}
       <aside
         className={`${
-          collapsed ? 'w-16' : 'w-64'
-        } bg-gray-900 text-white flex flex-col transition-all duration-300 ease-in-out shrink-0`}
+          collapsed ? 'w-20' : 'w-64'
+        } bg-[#0f2f2a] text-white flex flex-col transition-all duration-300`}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-4 py-5 border-b border-gray-700 min-h-[64px]">
-          <div className="flex items-center justify-center w-9 h-9 bg-blue-500 rounded-lg shrink-0">
+        <div className="flex items-center gap-3 px-4 py-5 border-b border-white/10">
+          <div className="flex items-center justify-center w-10 h-10 bg-[#1f5c52] rounded-xl shadow-md">
             <Truck size={20} className="text-white" />
           </div>
           {!collapsed && (
-            <span className="font-bold text-base tracking-tight whitespace-nowrap">
-              Transport MS
+            <span className="font-semibold text-lg tracking-tight">
+              Transport
             </span>
           )}
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 py-4 space-y-1 px-2 overflow-y-auto">
+        <nav className="flex-1 px-3 py-4 space-y-2">
           {navItems.map(({ label, to, icon: Icon }) => (
             <NavLink
               key={to}
               to={to}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
                   isActive
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                    ? 'bg-[#1f5c52] text-white shadow'
+                    : 'text-white/60 hover:bg-white/10 hover:text-white'
                 }`
               }
             >
-              <Icon size={18} className="shrink-0" />
+              <Icon size={18} />
               {!collapsed && <span>{label}</span>}
             </NavLink>
           ))}
         </nav>
 
-        {/* User + Logout */}
-        <div className="border-t border-gray-700 p-3 space-y-1">
+        {/* User */}
+        <div className="border-t border-white/10 p-3">
           {!collapsed && (
-            <div className="px-3 py-2">
-              <p className="text-xs font-semibold text-white truncate">
+            <div className="mb-3 px-2">
+              <p className="text-sm font-semibold">
                 {user?.first_name} {user?.last_name}
               </p>
-              <p className="text-xs text-gray-400 capitalize">{user?.role}</p>
+              <p className="text-xs text-white/60 capitalize">
+                {user?.role}
+              </p>
             </div>
           )}
+
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-colors"
+            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm text-white/70 hover:bg-white/10 hover:text-white transition"
           >
-            <LogOut size={18} className="shrink-0" />
+            <LogOut size={18} />
             {!collapsed && <span>Logout</span>}
           </button>
         </div>
       </aside>
 
-      {/* Main content */}
+      {/* 🌿 MAIN */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Topbar */}
-        <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center gap-4 shrink-0">
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
-          >
-            {collapsed ? <Menu size={20} /> : <X size={20} />}
-          </button>
-          <h1 className="text-sm font-semibold text-gray-700">
-            Welcome back, {user?.first_name} 👋
-          </h1>
+        
+        {/* 🔝 TOPBAR */}
+        <header className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between shadow-sm">
+          
+          {/* Left */}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className="p-2 rounded-lg hover:bg-gray-100 transition"
+            >
+              {collapsed ? <Menu size={20} /> : <X size={20} />}
+            </button>
+
+            <div>
+              <p className="text-xs text-gray-400">Welcome back</p>
+              <h1 className="text-sm font-semibold text-gray-700">
+                {user?.first_name} 👋
+              </h1>
+            </div>
+          </div>
+
+          {/* Right (Profile) */}
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:block text-right">
+              <p className="text-sm font-medium text-gray-700">
+                {user?.first_name}
+              </p>
+              <p className="text-xs text-gray-400 capitalize">
+                {user?.role}
+              </p>
+            </div>
+
+            <div className="w-10 h-10 rounded-full bg-[#1f5c52] flex items-center justify-center text-white font-semibold shadow">
+              {user?.first_name?.charAt(0)}
+            </div>
+          </div>
         </header>
 
-        {/* Page content */}
+        {/* 📄 CONTENT */}
         <main className="flex-1 overflow-y-auto p-6">
           {children}
         </main>
