@@ -258,7 +258,7 @@ export const Users = () => {
                   >
                     <option value="">Select department</option>
                     {departments.map((d) => (
-<option key={d.id} value={d.id}>{d.name ?? d.code}</option>                    ))}
+<option key={d.id} value={d.id}>{d.name ?? d.code}</option>                  ))}
                   </select>
                   {errors.department_id && <p className="mt-1 text-sm text-red-500">{errors.department_id.message}</p>}
                 </div>

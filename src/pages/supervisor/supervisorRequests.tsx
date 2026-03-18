@@ -21,13 +21,13 @@ const formatTime = (iso: string) => {
 };
 
 export const SupervisorRequests = () => {
-  const [requests, setRequests]           = useState<any[]>([]);
-  const [loading, setLoading]             = useState(true);
-  const [confirmApprove, setConfirmApprove] = useState<any | null>(null);
-  const [confirmReject, setConfirmReject]   = useState<any | null>(null);
+  const [requests, setRequests]               = useState<any[]>([]);
+  const [loading, setLoading]                 = useState(true);
+  const [confirmApprove, setConfirmApprove]   = useState<any | null>(null);
+  const [confirmReject, setConfirmReject]     = useState<any | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
-  const [processing, setProcessing]       = useState(false);
-  const [apiError, setApiError]           = useState('');
+  const [processing, setProcessing]           = useState(false);
+  const [apiError, setApiError]               = useState('');
 
   const fetchRequests = async () => {
     setLoading(true);
@@ -41,9 +41,7 @@ export const SupervisorRequests = () => {
     }
   };
 
-  useEffect(() => {
-    fetchRequests();
-  }, []);
+  useEffect(() => { fetchRequests(); }, []);
 
   const handleApprove = async () => {
     if (!confirmApprove) return;
@@ -54,7 +52,7 @@ export const SupervisorRequests = () => {
       setConfirmApprove(null);
       fetchRequests();
     } catch (err: any) {
-      setApiError(err.response?.data?.error || 'Failed to approve request.');
+      setApiError(err.response?.data?.error || 'Failed to approve.');
     } finally {
       setProcessing(false);
     }
@@ -70,7 +68,7 @@ export const SupervisorRequests = () => {
       setRejectionReason('');
       fetchRequests();
     } catch (err: any) {
-      setApiError(err.response?.data?.error || 'Failed to reject request.');
+      setApiError(err.response?.data?.error || 'Failed to reject.');
     } finally {
       setProcessing(false);
     }
@@ -81,13 +79,11 @@ export const SupervisorRequests = () => {
   return (
     <StaffLayout>
       <div className="space-y-6">
-        {/* Header */}
         <div>
           <h2 className="text-2xl font-bold text-gray-800">Transport Requests</h2>
           <p className="text-sm text-gray-500 mt-1">Review and approve requests from your department</p>
         </div>
 
-        {/* Table */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center py-20">
@@ -103,11 +99,12 @@ export const SupervisorRequests = () => {
                 <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
                   <tr>
                     <th className="px-6 py-3 text-left font-medium">ID</th>
+                    <th className="px-6 py-3 text-left font-medium">Requester</th>
+                    <th className="px-6 py-3 text-left font-medium">Department</th>
                     <th className="px-6 py-3 text-left font-medium">Destination</th>
                     <th className="px-6 py-3 text-left font-medium">Purpose</th>
                     <th className="px-6 py-3 text-left font-medium">Date</th>
                     <th className="px-6 py-3 text-left font-medium">Time</th>
-                    <th className="px-6 py-3 text-left font-medium">Service</th>
                     <th className="px-6 py-3 text-left font-medium">Status</th>
                     <th className="px-6 py-3 text-left font-medium">Actions</th>
                   </tr>
@@ -116,13 +113,18 @@ export const SupervisorRequests = () => {
                   {requests.map((req) => (
                     <tr key={req.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 text-gray-500">#{req.id}</td>
-                      <td className="px-6 py-4 font-medium text-gray-800">{req.destination}</td>
+                      <td className="px-6 py-4 font-medium text-gray-800">
+                        {req.requester ? `${req.requester.first_name} ${req.requester.last_name}` : '—'}
+                      </td>
+                      <td className="px-6 py-4 text-gray-500">
+                        {req.department?.name ?? req.department?.code ?? '—'}
+                      </td>
+                      <td className="px-6 py-4 text-gray-800">{req.destination}</td>
                       <td className="px-6 py-4 text-gray-500 max-w-xs truncate">{req.purpose}</td>
                       <td className="px-6 py-4 text-gray-500">{req.required_date}</td>
                       <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
                         {formatTime(req.required_from_time)} – {formatTime(req.required_to_time)}
                       </td>
-                      <td className="px-6 py-4 text-gray-500 capitalize">{req.service_type}</td>
                       <td className="px-6 py-4">
                         <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${statusColors[req.status] ?? 'bg-gray-100 text-gray-500'}`}>
                           {req.status?.replace(/_/g, ' ')}
@@ -156,7 +158,7 @@ export const SupervisorRequests = () => {
         </div>
       </div>
 
-      {/* ── Approve Confirmation Modal ── */}
+      {/* Approve Modal */}
       {confirmApprove && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 space-y-4">
@@ -170,29 +172,20 @@ export const SupervisorRequests = () => {
               </div>
             </div>
             <p className="text-sm text-gray-600">
-              Approve request to{' '}
-              <span className="font-semibold">{confirmApprove.destination}</span>?
+              Approve request to <span className="font-semibold">{confirmApprove.destination}</span>?
             </p>
-            {apiError && (
-              <p className="text-sm text-red-500 bg-red-50 p-2 rounded-lg">{apiError}</p>
-            )}
+            {apiError && <p className="text-sm text-red-500 bg-red-50 p-2 rounded-lg">{apiError}</p>}
             <div className="flex gap-3">
-              <Button variant="secondary" fullWidth onClick={() => setConfirmApprove(null)}>
-                Cancel
-              </Button>
+              <Button variant="secondary" fullWidth onClick={() => setConfirmApprove(null)}>Cancel</Button>
               <Button fullWidth disabled={processing} onClick={handleApprove}>
-                {processing ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <Loader2 size={16} className="animate-spin" /> Approving...
-                  </span>
-                ) : 'Approve'}
+                {processing ? <span className="flex items-center justify-center gap-2"><Loader2 size={16} className="animate-spin" /> Approving...</span> : 'Approve'}
               </Button>
             </div>
           </div>
         </div>
       )}
 
-      {/* ── Reject Modal ── */}
+      {/* Reject Modal */}
       {confirmReject && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 space-y-4">
@@ -206,8 +199,7 @@ export const SupervisorRequests = () => {
               </div>
             </div>
             <p className="text-sm text-gray-600">
-              Rejecting request to{' '}
-              <span className="font-semibold">{confirmReject.destination}</span>.
+              Rejecting request to <span className="font-semibold">{confirmReject.destination}</span>.
             </p>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
@@ -224,24 +216,11 @@ export const SupervisorRequests = () => {
                 <p className="mt-1 text-xs text-red-500">Rejection reason is required.</p>
               )}
             </div>
-            {apiError && (
-              <p className="text-sm text-red-500 bg-red-50 p-2 rounded-lg">{apiError}</p>
-            )}
+            {apiError && <p className="text-sm text-red-500 bg-red-50 p-2 rounded-lg">{apiError}</p>}
             <div className="flex gap-3">
-              <Button variant="secondary" fullWidth onClick={() => setConfirmReject(null)}>
-                Cancel
-              </Button>
-              <Button
-                variant="danger"
-                fullWidth
-                disabled={processing || !rejectionReason.trim()}
-                onClick={handleReject}
-              >
-                {processing ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <Loader2 size={16} className="animate-spin" /> Rejecting...
-                  </span>
-                ) : 'Reject'}
+              <Button variant="secondary" fullWidth onClick={() => setConfirmReject(null)}>Cancel</Button>
+              <Button variant="danger" fullWidth disabled={processing || !rejectionReason.trim()} onClick={handleReject}>
+                {processing ? <span className="flex items-center justify-center gap-2"><Loader2 size={16} className="animate-spin" /> Rejecting...</span> : 'Reject'}
               </Button>
             </div>
           </div>

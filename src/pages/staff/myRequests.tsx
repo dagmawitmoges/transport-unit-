@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { StaffLayout } from '../../layout/stafflayouts';
 import { getMyTransportRequests, cancelTransportRequest } from '../../api/transportrequests';
 import { Button } from '../../components/button';
-import { Loader2, PlusCircle, ShieldAlert, X } from 'lucide-react';
+import { Loader2, PlusCircle, ShieldAlert } from 'lucide-react';
 
 const statusColors: Record<string, string> = {
   pending:   'bg-yellow-100 text-yellow-700',
@@ -15,10 +15,10 @@ const statusColors: Record<string, string> = {
 };
 
 export const MyRequests = () => {
-  const [requests, setRequests] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [requests, setRequests]         = useState<any[]>([]);
+  const [loading, setLoading]           = useState(true);
   const [confirmCancel, setConfirmCancel] = useState<any | null>(null);
-  const [cancelling, setCancelling] = useState(false);
+  const [cancelling, setCancelling]     = useState(false);
   const navigate = useNavigate();
 
   const fetchRequests = async () => {
@@ -32,9 +32,7 @@ export const MyRequests = () => {
     }
   };
 
-  useEffect(() => {
-    fetchRequests();
-  }, []);
+  useEffect(() => { fetchRequests(); }, []);
 
   const handleCancel = async () => {
     if (!confirmCancel) return;
@@ -53,13 +51,11 @@ export const MyRequests = () => {
   return (
     <StaffLayout>
       <div className="space-y-6">
-        {/* Header */}
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-gray-800">My Requests</h2>
             <p className="text-sm text-gray-500 mt-1">Track all your transport requests</p>
           </div>
-          
           <button
             onClick={() => navigate('/staff/request')}
             className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl transition-colors"
@@ -69,7 +65,6 @@ export const MyRequests = () => {
           </button>
         </div>
 
-        {/* Table */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center py-20">
@@ -78,10 +73,7 @@ export const MyRequests = () => {
           ) : requests.length === 0 ? (
             <div className="text-center py-20 space-y-3">
               <p className="text-gray-400 text-sm">No requests found.</p>
-              <button
-                onClick={() => navigate('/staff/request')}
-                className="text-sm text-blue-600 hover:underline"
-              >
+              <button onClick={() => navigate('/staff/request')} className="text-sm text-blue-600 hover:underline">
                 Create your first request
               </button>
             </div>
@@ -91,6 +83,7 @@ export const MyRequests = () => {
                 <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
                   <tr>
                     <th className="px-6 py-3 text-left font-medium">Destination</th>
+                    <th className="px-6 py-3 text-left font-medium">Department</th>
                     <th className="px-6 py-3 text-left font-medium">Purpose</th>
                     <th className="px-6 py-3 text-left font-medium">Date</th>
                     <th className="px-6 py-3 text-left font-medium">Service</th>
@@ -102,6 +95,7 @@ export const MyRequests = () => {
                   {requests.map((req) => (
                     <tr key={req.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 font-medium text-gray-800">{req.destination}</td>
+                      <td className="px-6 py-4 text-gray-500">{req.department?.name ?? req.department?.code ?? '—'}</td>
                       <td className="px-6 py-4 text-gray-500 max-w-xs truncate">{req.purpose}</td>
                       <td className="px-6 py-4 text-gray-500">{req.required_date}</td>
                       <td className="px-6 py-4 text-gray-500 capitalize">{req.service_type}</td>
@@ -129,7 +123,6 @@ export const MyRequests = () => {
         </div>
       </div>
 
-      {/* Confirm Cancel Modal */}
       {confirmCancel && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 space-y-4">
@@ -143,21 +136,16 @@ export const MyRequests = () => {
               </div>
             </div>
             <p className="text-sm text-gray-600">
-              Are you sure you want to cancel the request to{' '}
-              <span className="font-semibold">{confirmCancel.destination}</span>?
+              Cancel request to <span className="font-semibold">{confirmCancel.destination}</span>?
             </p>
             <div className="flex gap-3">
-              <Button variant="secondary" fullWidth onClick={() => setConfirmCancel(null)}>
-                Keep it
-              </Button>
+              <Button variant="secondary" fullWidth onClick={() => setConfirmCancel(null)}>Keep it</Button>
               <Button variant="danger" fullWidth disabled={cancelling} onClick={handleCancel}>
                 {cancelling ? (
                   <span className="flex items-center justify-center gap-2">
                     <Loader2 size={16} className="animate-spin" /> Cancelling...
                   </span>
-                ) : (
-                  'Yes, Cancel'
-                )}
+                ) : 'Yes, Cancel'}
               </Button>
             </div>
           </div>
