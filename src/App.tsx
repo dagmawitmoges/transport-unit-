@@ -11,6 +11,7 @@ import { StaffDashboard } from './pages/staff/staffdashboard';
 import { CreateRequest } from './pages/staff/createRequests';
 import { MyRequests } from './pages/staff/myRequests';
 import { SupervisorRequests } from './pages/supervisor/supervisorRequests';
+import { DispatcherRequests } from './pages/dispatcher/dispatcherrequest';
 import type { Role } from './types';
 
 const STAFF_ROLES = [
@@ -40,6 +41,7 @@ function App() {
           <Route path="/staff/request"   element={<ProtectedRoute><RoleRoute allowedRoles={['requester'] as Role[]}><CreateRequest /></RoleRoute></ProtectedRoute>} />
           <Route path="/staff/requests"  element={<ProtectedRoute><RoleRoute allowedRoles={['requester'] as Role[]}><MyRequests /></RoleRoute></ProtectedRoute>} />
           <Route path="/staff/review"    element={<ProtectedRoute><RoleRoute allowedRoles={['supervisor', 'director'] as Role[]}><SupervisorRequests /></RoleRoute></ProtectedRoute>} />
+          <Route path="/staff/dispatch"  element={<ProtectedRoute><RoleRoute allowedRoles={['dispatcher', 'dispatcher_supervisor'] as Role[]}><DispatcherRequests /></RoleRoute></ProtectedRoute>} />
 
           {/* Catch-all */}
           <Route path="/" element={<Navigate to="/login" replace />} />

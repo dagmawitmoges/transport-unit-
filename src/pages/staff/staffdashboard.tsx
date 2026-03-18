@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { StaffLayout } from '../../layout/stafflayouts';
 import { getMyTransportRequests } from '../../api/transportrequests';
 import { FileText, Clock, CheckCircle, XCircle, PlusCircle, Loader2 } from 'lucide-react';
+import { useAuth } from '../../auth/authContext';
 
 const statusColors: Record<string, string> = {
   pending:   'bg-yellow-100 text-yellow-700',
@@ -35,6 +36,7 @@ export const StaffDashboard = () => {
   const pending   = requests.filter((r) => r.status === 'pending').length;
   const approved  = requests.filter((r) => r.status === 'approved').length;
   const rejected  = requests.filter((r) => r.status === 'rejected').length;
+  const { user } = useAuth();
 
   const stats = [
     { label: 'Total Requests', value: requests.length, icon: <FileText size={22} className="text-blue-600" />,   color: 'bg-blue-50' },
@@ -52,13 +54,16 @@ export const StaffDashboard = () => {
             <h2 className="text-2xl font-bold text-gray-800">Dashboard</h2>
             <p className="text-sm text-gray-500 mt-1">Your transport request overview</p>
           </div>
-          <button
-            onClick={() => navigate('/staff/request')}
-            className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl transition-colors"
-          >
-            <PlusCircle size={16} />
-            New Request
-          </button>
+
+          {user?.role === 'requester' && (
+  <button
+    onClick={() => navigate('/staff/request')}
+    className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl transition-colors"
+  >
+    <PlusCircle size={16} />
+    New Request
+  </button>
+)}
         </div>
 
         {/* Stats */}

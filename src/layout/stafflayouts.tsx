@@ -6,17 +6,23 @@ import {
   PlusCircle,
   FileText,
   ClipboardCheck,
+  Truck,
   LogOut,
   Menu,
   X,
-  Truck,
 } from 'lucide-react';
 
 const allNavItems = [
-  { label: 'Dashboard',   to: '/staff/dashboard', icon: LayoutDashboard, roles: ['requester', 'dispatcher', 'dispatcher_supervisor', 'supervisor', 'director', 'driver'] },
-  { label: 'New Request', to: '/staff/request',   icon: PlusCircle,      roles: ['requester'] },
-  { label: 'My Requests', to: '/staff/requests',  icon: FileText,        roles: ['requester'] },
-  { label: 'Review',      to: '/staff/review',    icon: ClipboardCheck,  roles: ['supervisor', 'director'] },
+  {
+    label: 'Dashboard',
+    to: '/staff/dashboard',
+    icon: LayoutDashboard,
+    roles: ['requester', 'dispatcher', 'dispatcher_supervisor', 'supervisor', 'director', 'driver'],
+  },
+  { label: 'New Request', to: '/staff/request',  icon: PlusCircle,     roles: ['requester'] },
+  { label: 'My Requests', to: '/staff/requests', icon: FileText,       roles: ['requester'] },
+  { label: 'Review',      to: '/staff/review',   icon: ClipboardCheck, roles: ['supervisor', 'director'] },
+  { label: 'Dispatch',    to: '/staff/dispatch', icon: Truck,          roles: ['dispatcher', 'dispatcher_supervisor'] },
 ];
 
 export const StaffLayout = ({ children }: { children: React.ReactNode }) => {
@@ -24,10 +30,7 @@ export const StaffLayout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  const handleLogout = () => { logout(); navigate('/login'); };
 
   const navItems = allNavItems.filter(
     (item) => user?.role && item.roles.includes(user.role)
