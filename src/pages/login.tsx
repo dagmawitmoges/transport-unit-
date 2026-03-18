@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/authContext';
-import { mockApi } from '../api/mockApi';
+import { loginRequest } from '../api/auth';
 import { Input } from '../components/input';
 import { Button } from '../components/button';
 import { LogIn } from 'lucide-react';
@@ -20,23 +20,36 @@ export const Login = () => {
     setError('');
     setLoading(true);
 
-    try {
-      const response = await mockApi.login(email, password);
-      login(response.token, response.user);
+   
+  try {
+    const res = await loginRequest(email, password);
+    
+    console.log('Full response:', res);          // See the whole response
+    console.log('Response data:', res.data);     // See the data shape
 
-      if (response.user.role === 'admin') {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/staff/dashboard');
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
-    } finally {
-      setLoading(false);
-    }
-  };
+    const token = res.data.access_token;
+    const user = res.data.user;
 
-  return (
+    console.log('Token:', token);                // Is token extracted?
+    console.log('User:', user);                  // Is user extracted?
+    console.log('User role:', user?.role);       // What role is coming back?
+
+    login(token, user);
+
+    const destination = user.role === 'admin' ? '/admin/dashboard' : '/staff/dashboard';
+    console.log('Navigating to:', destination);  // Where is it trying to go?
+    
+    navigate(destination);
+
+  } catch (err: any) {
+    console.log('Error:', err);
+    console.log('Error response:', err.response?.data);
+    setError(err.response?.data?.error || 'Login failed');
+  } finally {
+    setLoading(false);
+  }};
+
+   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-8">
@@ -54,7 +67,7 @@ export const Login = () => {
             <Input
               type="email"
               label="Email"
-              placeholder="admin@transport.com"
+              placeholder="admin@au.int"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -82,9 +95,9 @@ export const Login = () => {
 
           <div className="mt-6 p-4 bg-blue-50/50 rounded-xl">
             <p className="text-xs text-gray-600 font-semibold mb-2">Demo Accounts:</p>
-            <p className="text-xs text-gray-600">Admin: admin@transport.com</p>
-            <p className="text-xs text-gray-600">Staff: mike@transport.com</p>
-            <p className="text-xs text-gray-500 mt-1 italic">Use any password</p>
+            <p className="text-xs text-gray-600">Admin: admin@au.int</p>
+            <p className="text-xs text-gray-600">Dispatcher: dispatcher@au.int</p>
+            <p className="text-xs text-gray-500 mt-1 italic">Password: Password1!</p>
           </div>
         </div>
       </div>

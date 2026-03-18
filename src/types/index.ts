@@ -1,5 +1,13 @@
-export type Role = 'admin' | 'transport_manager' | 'driver' | 'employee';
-
+export type Role =
+  | 'admin'
+  | 'dispatcher'
+  | 'dispatcher_supervisor'
+  | 'supervisor'
+  | 'director'
+  | 'requester'
+  | 'driver'
+  | 'transport_manager'
+  | 'employee';
 export type UserStatus = 'active' | 'inactive';
 
 export interface User {
@@ -13,12 +21,14 @@ export interface User {
 }
 
 export interface AuthUser {
-  id: string;
-  full_name: string;
-  role: Role;
+  id: number;
+  first_name: string;
+  last_name: string;
   email: string;
-  department: string;
+  role: string;
+  department?: string;
 }
+
 
 export interface LoginResponse {
   token: string;

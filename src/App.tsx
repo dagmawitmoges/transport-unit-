@@ -5,17 +5,20 @@ import { RoleRoute } from './auth/roleRoute';
 import { Login } from './pages/login';
 import { Unauthorized } from './pages/unauthorized';
 import { AdminDashboard } from './pages/admin/dashboard';
-import { CreateUser } from './pages/admin/createUser';
-// import { AdminDashboard } from './pages/admin/Dashboard';
-// import { Users } from './pages/admin/Users';
-// import { CreateUser } from './pages/admin/CreateUser';
-// import { Reports } from './pages/admin/Reports';
-// import { Roles } from './pages/admin/Roles';
-// import { Departments } from './pages/admin/Departments';
-// import { StaffDashboard } from './pages/staff/Dashboard';
-// import { RequestTransport } from './pages/staff/RequestTransport';
-// import { MyRequests } from './pages/staff/MyRequests';
-// import { Profile } from './pages/staff/Profile';
+import { Users } from './pages/admin/Users';
+import { StaffDashboard } from './pages/staff/staffdashboard';
+import { CreateRequest } from './pages/staff/createRequests';
+import { MyRequests } from './pages/staff/myRequests';
+import type { Role } from './types';
+
+const STAFF_ROLES = [
+  'dispatcher',
+  'dispatcher_supervisor',
+  'supervisor',
+  'director',
+  'requester',
+  'driver',
+] as Role[];
 
 function App() {
   return (
@@ -25,6 +28,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
+          {/* Admin Routes */}
           <Route
             path="/admin/dashboard"
             element={
@@ -35,7 +39,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          {/* <Route
+          <Route
             path="/admin/users"
             element={
               <ProtectedRoute>
@@ -44,89 +48,41 @@ function App() {
                 </RoleRoute>
               </ProtectedRoute>
             }
-          /> */}
-          <Route
-            path="/admin/users/create"
-            element={
-              <ProtectedRoute>
-                <RoleRoute allowedRoles={['admin']}>
-                  <CreateUser />
-                </RoleRoute>
-              </ProtectedRoute>
-            }
           />
-          {/* <Route
-            path="/admin/reports"
-            element={
-              <ProtectedRoute>
-                <RoleRoute allowedRoles={['admin']}>
-                  <Reports />
-                </RoleRoute>
-              </ProtectedRoute>
-            }
-          /> */}
-          {/* <Route
-            path="/admin/roles"
-            element={
-              <ProtectedRoute>
-                <RoleRoute allowedRoles={['admin']}>
-                  <Roles />
-                </RoleRoute>
-              </ProtectedRoute>
-            }
-          /> */}
-          {/* <Route
-            path="/admin/departments"
-            element={
-              <ProtectedRoute>
-                <RoleRoute allowedRoles={['admin']}>
-                  <Departments />
-                </RoleRoute>
-              </ProtectedRoute>
-            }
-          /> */}
 
-          {/* <Route
+          {/* Staff Routes */}
+          <Route
             path="/staff/dashboard"
             element={
               <ProtectedRoute>
-                <RoleRoute allowedRoles={['transport_manager', 'driver', 'employee']}>
+                <RoleRoute allowedRoles={STAFF_ROLES}>
                   <StaffDashboard />
                 </RoleRoute>
               </ProtectedRoute>
             }
-          /> */}
-          {/* <Route
-            path="/staff/request-transport"
+          />
+          <Route
+            path="/staff/request"
             element={
               <ProtectedRoute>
-                <RoleRoute allowedRoles={['transport_manager', 'driver', 'employee']}>
-                  <RequestTransport />
+                <RoleRoute allowedRoles={STAFF_ROLES}>
+                  <CreateRequest />
                 </RoleRoute>
               </ProtectedRoute>
             }
-          /> */}
-          {/* <Route
-            path="/staff/my-requests"
+          />
+          <Route
+            path="/staff/requests"
             element={
               <ProtectedRoute>
-                <RoleRoute allowedRoles={['transport_manager', 'driver', 'employee']}>
+                <RoleRoute allowedRoles={STAFF_ROLES}>
                   <MyRequests />
                 </RoleRoute>
               </ProtectedRoute>
             }
-          /> */}
-          {/* <Route
-            path="/staff/profile"
-            element={
-              <ProtectedRoute>
-                <RoleRoute allowedRoles={['transport_manager', 'driver', 'employee']}>
-                  <Profile />
-                </RoleRoute>
-              </ProtectedRoute>
-            }
-          /> */}
+          />
 
+          {/* Catch-all */}
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>

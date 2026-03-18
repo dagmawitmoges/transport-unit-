@@ -3,8 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/authContext';
 import {
   LayoutDashboard,
-  Users,
-  Car,
+  PlusCircle,
   FileText,
   LogOut,
   Menu,
@@ -13,13 +12,12 @@ import {
 } from 'lucide-react';
 
 const navItems = [
-  { label: 'Dashboard', to: '/admin/dashboard', icon: LayoutDashboard },
-  { label: 'Users',     to: '/admin/users',     icon: Users },
-  { label: 'Vehicles',  to: '/admin/vehicles',  icon: Car },
-  { label: 'Requests',  to: '/admin/requests',  icon: FileText },
+  { label: 'Dashboard',        to: '/staff/dashboard', icon: LayoutDashboard },
+  { label: 'New Request',      to: '/staff/request',   icon: PlusCircle },
+  { label: 'My Requests',      to: '/staff/requests',  icon: FileText },
 ];
 
-export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
+export const StaffLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
@@ -76,7 +74,9 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               <p className="text-xs font-semibold text-white truncate">
                 {user?.first_name} {user?.last_name}
               </p>
-              <p className="text-xs text-gray-400 capitalize">{user?.role}</p>
+              <p className="text-xs text-gray-400 capitalize">
+                {user?.role?.replace(/_/g, ' ')}
+              </p>
             </div>
           )}
           <button
@@ -105,9 +105,7 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-6">
-          {children}
-        </main>
+        <main className="flex-1 overflow-y-auto p-6">{children}</main>
       </div>
     </div>
   );

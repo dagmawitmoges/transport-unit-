@@ -11,7 +11,7 @@ interface RoleRouteProps {
 export const RoleRoute = ({ children, allowedRoles }: RoleRouteProps) => {
   const { user } = useAuth();
 
-  if (!user || !allowedRoles.includes(user.role)) {
+  if (!user || !allowedRoles.includes(user.role as Role)) {
     return <Navigate to="/unauthorized" replace />;
   }
 
