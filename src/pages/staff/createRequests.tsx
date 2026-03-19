@@ -12,17 +12,16 @@ import { Loader2 } from 'lucide-react';
 
 const schema = z
   .object({
-    originator_office:    z.string().min(1, 'Originator office is required'),
-    telephone_extension:  z.string().min(1, 'Telephone extension is required'),
-    department_id:        z.string().min(1, 'Department is required'),
-    required_date:        z.string().min(1, 'Required date is required'),
-    required_from_time:   z.string().min(1, 'From time is required'),
-    required_to_time:     z.string().min(1, 'To time is required'),
-    working_hours:        z.boolean(),
-    destination:          z.string().min(1, 'Destination is required'),
-    purpose:              z.string().min(1, 'Purpose is required'),
-    service_type:         z.enum(['passenger', 'pickup']),
-    passenger_count:      z.number().optional(),
+    telephone_extension: z.string().min(7, 'Phone number is required'),
+    department_id:       z.string().min(1, 'Department is required'),
+    required_date:       z.string().min(1, 'Required date is required'),
+    required_from_time:  z.string().min(1, 'From time is required'),
+    required_to_time:    z.string().min(1, 'To time is required'),
+    working_hours:       z.boolean(),
+    destination:         z.string().min(1, 'Destination is required'),
+    purpose:             z.string().min(1, 'Purpose is required'),
+    service_type:        z.enum(['passenger', 'pickup']),
+    passenger_count:     z.number().optional(),
   })
   .refine((d) => d.required_to_time > d.required_from_time, {
     message: 'End time must be after start time',
@@ -37,8 +36,8 @@ type FormData = z.infer<typeof schema>;
 
 export const CreateRequest = () => {
   const navigate = useNavigate();
-  const [submitting, setSubmitting] = useState(false);
-  const [apiError, setApiError]     = useState('');
+  const [submitting, setSubmitting]   = useState(false);
+  const [apiError, setApiError]       = useState('');
   const [departments, setDepartments] = useState<any[]>([]);
 
   useEffect(() => {
@@ -56,12 +55,19 @@ export const CreateRequest = () => {
   });
 
   const serviceType = watch('service_type');
+  const departmentId = watch('department_id');
 
   const onSubmit = async (data: FormData) => {
     setSubmitting(true);
     setApiError('');
     try {
-      await createTransportRequest(data);
+      // Auto-fill originator_office from selected department
+      const selectedDept = departments.find((d) => d.id === data.department_id);
+      const payload = {
+        ...data,
+        originator_office: selectedDept?.name ?? selectedDept?.code ?? data.department_id,
+      };
+      await createTransportRequest(payload);
       navigate('/staff/requests');
     } catch (err: any) {
       setApiError(
@@ -85,16 +91,10 @@ export const CreateRequest = () => {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 
+            {/* Phone Number */}
             <Input
-              label="Originator Office"
-              placeholder="e.g. HR Department"
-              error={errors.originator_office?.message}
-              {...register('originator_office')}
-            />
-
-            <Input
-              label="Telephone Extension"
-              placeholder="e.g. 1234"
+              label="Phone Number"
+              placeholder="e.g. +251911234567"
               error={errors.telephone_extension?.message}
               {...register('telephone_extension')}
             />
@@ -120,6 +120,7 @@ export const CreateRequest = () => {
               )}
             </div>
 
+            {/* Required Date */}
             <Input
               label="Required Date"
               type="date"
@@ -127,6 +128,7 @@ export const CreateRequest = () => {
               {...register('required_date')}
             />
 
+            {/* Time */}
             <div className="grid grid-cols-2 gap-4">
               <Input
                 label="From Time"
@@ -142,6 +144,7 @@ export const CreateRequest = () => {
               />
             </div>
 
+            {/* Working Hours */}
             <div className="flex items-center gap-3">
               <input
                 type="checkbox"
@@ -154,6 +157,7 @@ export const CreateRequest = () => {
               </label>
             </div>
 
+            {/* Destination */}
             <Input
               label="Destination"
               placeholder="e.g. Addis Ababa Airport"
@@ -161,6 +165,7 @@ export const CreateRequest = () => {
               {...register('destination')}
             />
 
+            {/* Purpose */}
             <div className="w-full">
               <label className="block text-sm font-medium text-gray-700 mb-1.5">Purpose</label>
               <textarea
@@ -172,6 +177,7 @@ export const CreateRequest = () => {
               {errors.purpose && <p className="mt-1 text-sm text-red-500">{errors.purpose.message}</p>}
             </div>
 
+            {/* Service Type */}
             <div className="w-full">
               <label className="block text-sm font-medium text-gray-700 mb-1.5">Service Type</label>
               <select
@@ -183,6 +189,7 @@ export const CreateRequest = () => {
               </select>
             </div>
 
+            {/* Passenger Count */}
             {serviceType === 'passenger' && (
               <Input
                 label="Passenger Count"

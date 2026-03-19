@@ -7,9 +7,10 @@ import {
   FileText,
   ClipboardCheck,
   Truck,
+  Car,
   LogOut,
   Menu,
-  X,
+  ChevronLeft,
 } from 'lucide-react';
 
 const allNavItems = [
@@ -19,131 +20,135 @@ const allNavItems = [
     icon: LayoutDashboard,
     roles: ['requester', 'dispatcher', 'dispatcher_supervisor', 'supervisor', 'director', 'driver'],
   },
-  { label: 'New Request', to: '/staff/request', icon: PlusCircle, roles: ['requester'] },
-  { label: 'My Requests', to: '/staff/requests', icon: FileText, roles: ['requester'] },
-  { label: 'Review', to: '/staff/review', icon: ClipboardCheck, roles: ['supervisor', 'director'] },
-  { label: 'Dispatch', to: '/staff/dispatch', icon: Truck, roles: ['dispatcher', 'dispatcher_supervisor'] },
+  { label: 'New Request', to: '/staff/request',  icon: PlusCircle,     roles: ['requester'] },
+  { label: 'My Requests', to: '/staff/requests', icon: FileText,       roles: ['requester'] },
+  { label: 'Review',      to: '/staff/review',   icon: ClipboardCheck, roles: ['supervisor', 'director'] },
+  { label: 'Dispatch',    to: '/staff/dispatch', icon: Truck,          roles: ['dispatcher', 'dispatcher_supervisor'] },
+  { label: 'My Trips',    to: '/staff/trips',    icon: Car,            roles: ['driver'] },
 ];
+
+const roleLabels: Record<string, string> = {
+  requester:             'Requester',
+  dispatcher:            'Dispatcher',
+  dispatcher_supervisor: 'Dispatch Supervisor',
+  supervisor:            'Supervisor',
+  director:              'Director',
+  driver:                'Driver',
+};
 
 export const StaffLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
   const navItems = allNavItems.filter(
     (item) => user?.role && item.roles.includes(user.role)
   );
 
   return (
-    <div className="flex h-screen bg-[#f6f9f8] overflow-hidden">
-
-      {/* 🌿 SIDEBAR */}
-      <aside className={`${collapsed ? 'w-20' : 'w-64'} bg-[#0f2f2a] text-white flex flex-col transition-all duration-300`}>
-        
+    <div className="flex h-screen overflow-hidden" style={{ background: '#f0f4f0' }}>
+      {/* Sidebar */}
+      <aside
+        className="flex flex-col shrink-0 transition-all duration-300 ease-in-out"
+        style={{
+          width: collapsed ? '72px' : '240px',
+          background: 'linear-gradient(180deg, #005a2d 0%, #006233 60%, #004d27 100%)',
+          boxShadow: '4px 0 24px rgba(0,98,51,0.18)',
+        }}
+      >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-4 py-5 border-b border-white/10">
-          <div className="flex items-center justify-center w-10 h-10 bg-[#1f5c52] rounded-xl shadow">
-            <Truck size={20} className="text-white" />
+        <div className="flex items-center gap-3 px-4 py-5 border-b border-white/10 min-h-[68px]">
+          <div
+            className="flex items-center justify-center shrink-0 rounded-xl"
+            style={{ width: 40, height: 40, background: 'rgba(255,193,7,0.18)', border: '1.5px solid rgba(255,193,7,0.4)' }}
+          >
+            <Truck size={20} style={{ color: '#FFC107' }} />
           </div>
           {!collapsed && (
-            <span className="font-semibold text-lg tracking-tight">
-              Transport
-            </span>
+            <div>
+              <p className="font-bold text-white text-sm tracking-wide">Transport MS</p>
+              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>AU Staff Portal</p>
+            </div>
           )}
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-3 py-4 space-y-2">
+        <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
+          {!collapsed && (
+            <p className="text-xs font-semibold px-3 mb-3 uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.35)' }}>
+              Menu
+            </p>
+          )}
           {navItems.map(({ label, to, icon: Icon }) => (
             <NavLink
               key={to}
               to={to}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
-                  isActive
-                    ? 'bg-[#1f5c52] text-white shadow'
-                    : 'text-white/60 hover:bg-white/10 hover:text-white'
-                }`
-              }
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
+              style={({ isActive }) => isActive ? {
+                background: 'rgba(255,193,7,0.15)',
+                color: '#FFC107',
+                borderLeft: '3px solid #FFC107',
+              } : {
+                color: 'rgba(255,255,255,0.7)',
+              }}
             >
-              <Icon size={18} />
-              {!collapsed && <span>{label}</span>}
+              {({ isActive }) => (
+                <>
+                  <Icon size={18} className="shrink-0" style={{ color: isActive ? '#FFC107' : undefined }} />
+                  {!collapsed && <span>{label}</span>}
+                </>
+              )}
             </NavLink>
           ))}
         </nav>
 
-        {/* User */}
-        <div className="border-t border-white/10 p-3">
+        {/* User + Logout */}
+        <div className="border-t border-white/10 p-3 space-y-1">
           {!collapsed && (
-            <div className="mb-3 px-2">
-              <p className="text-sm font-semibold">
-                {user?.first_name} {user?.last_name}
-              </p>
-              <p className="text-xs text-white/60 capitalize">
-                {user?.role?.replace(/_/g, ' ')}
+            <div className="px-3 py-2 rounded-xl mb-1" style={{ background: 'rgba(255,255,255,0.06)' }}>
+              <p className="text-xs font-semibold text-white truncate">{user?.first_name} {user?.last_name}</p>
+              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                {roleLabels[user?.role ?? ''] ?? user?.role}
               </p>
             </div>
           )}
-
           <button
-            onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm text-white/70 hover:bg-white/10 hover:text-white transition"
+            onClick={() => { logout(); navigate('/login'); }}
+            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm transition-all duration-200 hover:bg-white/10"
+            style={{ color: 'rgba(255,255,255,0.6)' }}
           >
-            <LogOut size={18} />
+            <LogOut size={18} className="shrink-0" />
             {!collapsed && <span>Logout</span>}
           </button>
         </div>
       </aside>
 
-      {/* 🌿 MAIN */}
+      {/* Main */}
       <div className="flex-1 flex flex-col overflow-hidden">
-
-        {/* 🔝 TOPBAR */}
-        <header className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between shadow-sm">
-          
-          {/* Left */}
+        {/* Topbar */}
+        <header className="bg-white border-b px-6 py-3.5 flex items-center justify-between shrink-0" style={{ borderColor: '#e5ede8' }}>
           <div className="flex items-center gap-4">
             <button
               onClick={() => setCollapsed(!collapsed)}
-              className="p-2 rounded-lg hover:bg-gray-100 transition"
+              className="p-2 rounded-lg transition-colors hover:bg-gray-100"
             >
-              {collapsed ? <Menu size={20} /> : <X size={20} />}
+              {collapsed ? <Menu size={20} className="text-gray-500" /> : <ChevronLeft size={20} className="text-gray-500" />}
             </button>
-
             <div>
-              <p className="text-xs text-gray-400">Welcome back</p>
-              <h1 className="text-sm font-semibold text-gray-700">
-                {user?.first_name} 👋
-              </h1>
+              <h1 className="text-sm font-semibold text-gray-800">Welcome back, {user?.first_name} 👋</h1>
+              <p className="text-xs text-gray-400">AU Transport Management System</p>
             </div>
           </div>
-
-          {/* Right */}
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:block text-right">
-              <p className="text-sm font-medium text-gray-700">
-                {user?.first_name}
-              </p>
-              <p className="text-xs text-gray-400 capitalize">
-                {user?.role?.replace(/_/g, ' ')}
-              </p>
-            </div>
-
-            <div className="w-10 h-10 rounded-full bg-[#1f5c52] flex items-center justify-center text-white font-semibold shadow">
-              {user?.first_name?.charAt(0)}
-            </div>
+          <div
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold capitalize"
+            style={{ background: 'rgba(0,98,51,0.08)', color: '#006233' }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: '#006233' }}></span>
+            {roleLabels[user?.role ?? ''] ?? user?.role}
           </div>
         </header>
 
-        {/* 📄 CONTENT */}
-        <main className="flex-1 overflow-y-auto p-6">
-          {children}
-        </main>
+        <main className="flex-1 overflow-y-auto p-6">{children}</main>
       </div>
     </div>
   );

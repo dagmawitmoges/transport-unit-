@@ -6,12 +6,13 @@ import { getMyTransportRequests } from '../../api/transportrequests';
 import { FileText, Clock, CheckCircle, XCircle, PlusCircle, Loader2 } from 'lucide-react';
 
 const statusColors: Record<string, string> = {
-  pending:   'bg-yellow-100 text-yellow-700',
-  approved:  'bg-green-100 text-green-700',
-  rejected:  'bg-red-100 text-red-700',
-  assigned:  'bg-blue-100 text-blue-700',
-  completed: 'bg-gray-100 text-gray-600',
-  cancelled: 'bg-red-50 text-red-400',
+  pending:     'bg-yellow-100 text-yellow-700',
+  approved:    'bg-green-100 text-green-700',
+  rejected:    'bg-red-100 text-red-700',
+  assigned:    'bg-blue-100 text-blue-700',
+  in_progress: 'bg-orange-100 text-orange-700', // add this
+  completed:   'bg-gray-100 text-gray-600',
+  cancelled:   'bg-red-50 text-red-400',
 };
 
 export const StaffDashboard = () => {
