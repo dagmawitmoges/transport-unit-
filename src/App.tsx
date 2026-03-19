@@ -7,6 +7,7 @@ import { Unauthorized } from './pages/unauthorized';
 import { AdminDashboard } from './pages/admin/dashboard';
 import { Users } from './pages/admin/Users';
 import { AdminRequests } from './pages/admin/adminRequests';
+import { Vehicles } from './pages/admin/vehicles';
 import { StaffDashboard } from './pages/staff/staffdashboard';
 import { CreateRequest } from './pages/staff/createRequests';
 import { MyRequests } from './pages/staff/myRequests';
@@ -35,6 +36,7 @@ function App() {
           <Route path="/admin/dashboard" element={<ProtectedRoute><RoleRoute allowedRoles={['admin']}><AdminDashboard /></RoleRoute></ProtectedRoute>} />
           <Route path="/admin/users"     element={<ProtectedRoute><RoleRoute allowedRoles={['admin']}><Users /></RoleRoute></ProtectedRoute>} />
           <Route path="/admin/requests"  element={<ProtectedRoute><RoleRoute allowedRoles={['admin']}><AdminRequests /></RoleRoute></ProtectedRoute>} />
+          <Route path="/admin/vehicles"  element={<ProtectedRoute><RoleRoute allowedRoles={['admin']}><Vehicles /></RoleRoute></ProtectedRoute>} />
 
           {/* Staff Routes */}
           <Route path="/staff/dashboard" element={<ProtectedRoute><RoleRoute allowedRoles={STAFF_ROLES}><StaffDashboard /></RoleRoute></ProtectedRoute>} />
