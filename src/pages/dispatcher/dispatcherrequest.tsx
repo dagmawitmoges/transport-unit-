@@ -3,7 +3,7 @@ import { StaffLayout } from '../../layout/stafflayouts';
 import { getTransportRequests } from '../../api/admin';
 import { getAvailableDrivers, getAvailableVehicles, assignRequest } from '../../api/dispatcher';
 import { Button } from '../../components/button';
-import { Loader2, Truck, X } from 'lucide-react';
+import { Loader2, Truck, X, Eye } from 'lucide-react';
 
 const statusColors: Record<string, string> = {
   pending:   'bg-yellow-100 text-yellow-700',
@@ -19,14 +19,23 @@ const formatTime = (iso: string) => {
   return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
 
+const DetailRow = ({ label, value }: { label: string; value: any }) => (
+  <div className="flex flex-col gap-0.5">
+    <p className="text-xs text-gray-400">{label}</p>
+    <p className="text-sm font-medium text-gray-800">{value || '—'}</p>
+  </div>
+);
+
 export const DispatcherRequests = () => {
   const [requests, setRequests]       = useState<any[]>([]);
   const [drivers, setDrivers]         = useState<any[]>([]);
   const [vehicles, setVehicles]       = useState<any[]>([]);
   const [loading, setLoading]         = useState(true);
   const [assignModal, setAssignModal] = useState<any | null>(null);
+  const [detailModal, setDetailModal] = useState<any | null>(null);
   const [driverId, setDriverId]       = useState('');
   const [vehicleId, setVehicleId]     = useState('');
+  const [driverPhone, setDriverPhone] = useState('');
   const [notes, setNotes]             = useState('');
   const [submitting, setSubmitting]   = useState(false);
   const [apiError, setApiError]       = useState('');
@@ -55,8 +64,16 @@ export const DispatcherRequests = () => {
     setAssignModal(req);
     setDriverId('');
     setVehicleId('');
+    setDriverPhone('');
     setNotes('');
     setApiError('');
+  };
+
+  // Auto-fill driver phone when driver is selected
+  const handleDriverChange = (id: string) => {
+    setDriverId(id);
+    const selected = drivers.find((d) => String(d.id) === String(id));
+    setDriverPhone(selected?.phone_number ?? '');
   };
 
   const handleAssign = async () => {
@@ -64,7 +81,11 @@ export const DispatcherRequests = () => {
     setSubmitting(true);
     setApiError('');
     try {
-      await assignRequest(assignModal.id, { driver_id: driverId, vehicle_id: vehicleId, notes });
+      await assignRequest(assignModal.id, {
+        driver_id:  driverId,
+        vehicle_id: vehicleId,
+        notes,
+      });
       setAssignModal(null);
       fetchData();
     } catch (err: any) {
@@ -82,7 +103,6 @@ export const DispatcherRequests = () => {
           <p className="text-sm text-gray-500 mt-1">Assign drivers and vehicles to approved requests</p>
         </div>
 
-        {/* Stats bar */}
         <div className="flex flex-wrap gap-4">
           <div className="bg-white rounded-xl px-5 py-3 border border-gray-100 shadow-sm text-sm">
             <span className="text-gray-500">Approved requests: </span>
@@ -98,7 +118,6 @@ export const DispatcherRequests = () => {
           </div>
         </div>
 
-        {/* Table */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center py-20">
@@ -142,12 +161,20 @@ export const DispatcherRequests = () => {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <button
-                          onClick={() => openAssign(req)}
-                          className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 font-medium transition-colors"
-                        >
-                          <Truck size={14} /> Assign
-                        </button>
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => setDetailModal(req)}
+                            className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 font-medium transition-colors"
+                          >
+                            <Eye size={13} /> View
+                          </button>
+                          <button
+                            onClick={() => openAssign(req)}
+                            className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                          >
+                            <Truck size={13} /> Assign
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -158,7 +185,75 @@ export const DispatcherRequests = () => {
         </div>
       </div>
 
-      {/* Assign Modal */}
+      {/* ── Detail Modal ── */}
+      {detailModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 space-y-5 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-gray-800">Request Detail</h3>
+                <p className="text-sm text-gray-500">#{detailModal.id} · {detailModal.required_date}</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className={`px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${statusColors[detailModal.status] ?? 'bg-gray-100 text-gray-500'}`}>
+                  {detailModal.status?.replace(/_/g, ' ')}
+                </span>
+                <button onClick={() => setDetailModal(null)} className="p-1.5 rounded-lg hover:bg-gray-100">
+                  <X size={18} className="text-gray-500" />
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-xl">
+              <DetailRow label="Pickup Location" value={detailModal.pickup_location} />
+              <DetailRow label="Destination" value={detailModal.destination} />
+              <DetailRow label="Date" value={detailModal.required_date} />
+              <DetailRow label="Time" value={`${formatTime(detailModal.required_from_time)} – ${formatTime(detailModal.required_to_time)}`} />
+              <DetailRow label="Working Hours" value={detailModal.working_hours ? 'Yes' : 'No'} />
+              <DetailRow label="Service Type" value={detailModal.service_type} />
+              {detailModal.passenger_count && (
+                <DetailRow label="No. of People" value={detailModal.passenger_count} />
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-xl">
+              <DetailRow label="Requested By" value={
+                detailModal.requester
+                  ? `${detailModal.requester.first_name} ${detailModal.requester.last_name}`
+                  : '—'
+              } />
+              <DetailRow label="Department" value={detailModal.department?.name ?? detailModal.department?.code} />
+              <DetailRow label="Phone" value={detailModal.telephone_extension} />
+              <DetailRow label="Purpose" value={detailModal.purpose} />
+            </div>
+
+            {/* Approved by — important for dispatcher */}
+            {detailModal.reviewed_by && (
+              <div className="p-4 bg-green-50 border border-green-200 rounded-xl space-y-2">
+                <p className="text-xs font-semibold text-green-700 uppercase">Approved By</p>
+                <DetailRow
+                  label="Name"
+                  value={`${detailModal.reviewed_by.first_name} ${detailModal.reviewed_by.last_name}`}
+                />
+                <DetailRow label="Approved At" value={
+                  detailModal.reviewed_at
+                    ? new Date(detailModal.reviewed_at).toLocaleString()
+                    : '—'
+                } />
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              <Button fullWidth onClick={() => { setDetailModal(null); openAssign(detailModal); }}>
+                Assign Now
+              </Button>
+              <Button variant="secondary" fullWidth onClick={() => setDetailModal(null)}>Close</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Assign Modal ── */}
       {assignModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-5">
@@ -167,16 +262,19 @@ export const DispatcherRequests = () => {
                 <h3 className="text-lg font-bold text-gray-800">Assign Request #{assignModal.id}</h3>
                 <p className="text-sm text-gray-500">{assignModal.destination} · {assignModal.required_date}</p>
               </div>
-              <button onClick={() => setAssignModal(null)} className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors">
+              <button onClick={() => setAssignModal(null)} className="p-1.5 rounded-lg hover:bg-gray-100">
                 <X size={18} className="text-gray-500" />
               </button>
             </div>
 
+            {/* Driver */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Driver</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Driver <span className="text-red-500">*</span>
+              </label>
               <select
                 value={driverId}
-                onChange={(e) => setDriverId(e.target.value)}
+                onChange={(e) => handleDriverChange(e.target.value)}
                 className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
               >
                 <option value="">Select a driver</option>
@@ -187,8 +285,26 @@ export const DispatcherRequests = () => {
               {drivers.length === 0 && <p className="mt-1 text-xs text-red-500">No available drivers.</p>}
             </div>
 
+            {/* Driver Phone — auto filled, editable */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Vehicle</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Driver Phone Number <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={driverPhone}
+                onChange={(e) => setDriverPhone(e.target.value)}
+                placeholder="Auto-filled from driver profile"
+                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
+              />
+              <p className="mt-1 text-xs text-gray-400">Auto-filled from driver profile. Edit if needed.</p>
+            </div>
+
+            {/* Vehicle */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Vehicle <span className="text-red-500">*</span>
+              </label>
               <select
                 value={vehicleId}
                 onChange={(e) => setVehicleId(e.target.value)}
@@ -202,6 +318,7 @@ export const DispatcherRequests = () => {
               {vehicles.length === 0 && <p className="mt-1 text-xs text-red-500">No available vehicles.</p>}
             </div>
 
+            {/* Notes */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">Notes (optional)</label>
               <textarea

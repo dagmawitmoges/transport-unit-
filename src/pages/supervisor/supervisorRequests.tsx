@@ -3,7 +3,7 @@ import { StaffLayout } from '../../layout/stafflayouts';
 import { getMyTransportRequests } from '../../api/transportrequests';
 import { approveRequest, rejectRequest } from '../../api/supervisor';
 import { Button } from '../../components/button';
-import { Loader2, CheckCircle, XCircle, ShieldAlert } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle, ShieldAlert, X, Eye } from 'lucide-react';
 
 const statusColors: Record<string, string> = {
   pending:      'bg-yellow-100 text-yellow-700',
@@ -20,11 +20,19 @@ const formatTime = (iso: string) => {
   return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
 
+const DetailRow = ({ label, value }: { label: string; value: any }) => (
+  <div className="flex flex-col gap-0.5">
+    <p className="text-xs text-gray-400">{label}</p>
+    <p className="text-sm font-medium text-gray-800">{value || '—'}</p>
+  </div>
+);
+
 export const SupervisorRequests = () => {
   const [requests, setRequests]               = useState<any[]>([]);
   const [loading, setLoading]                 = useState(true);
   const [confirmApprove, setConfirmApprove]   = useState<any | null>(null);
   const [confirmReject, setConfirmReject]     = useState<any | null>(null);
+  const [detailModal, setDetailModal]         = useState<any | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
   const [processing, setProcessing]           = useState(false);
   const [apiError, setApiError]               = useState('');
@@ -102,9 +110,7 @@ export const SupervisorRequests = () => {
                     <th className="px-6 py-3 text-left font-medium">Requester</th>
                     <th className="px-6 py-3 text-left font-medium">Department</th>
                     <th className="px-6 py-3 text-left font-medium">Destination</th>
-                    <th className="px-6 py-3 text-left font-medium">Purpose</th>
                     <th className="px-6 py-3 text-left font-medium">Date</th>
-                    <th className="px-6 py-3 text-left font-medium">Time</th>
                     <th className="px-6 py-3 text-left font-medium">Status</th>
                     <th className="px-6 py-3 text-left font-medium">Actions</th>
                   </tr>
@@ -120,34 +126,37 @@ export const SupervisorRequests = () => {
                         {req.department?.name ?? req.department?.code ?? '—'}
                       </td>
                       <td className="px-6 py-4 text-gray-800">{req.destination}</td>
-                      <td className="px-6 py-4 text-gray-500 max-w-xs truncate">{req.purpose}</td>
                       <td className="px-6 py-4 text-gray-500">{req.required_date}</td>
-                      <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
-                        {formatTime(req.required_from_time)} – {formatTime(req.required_to_time)}
-                      </td>
                       <td className="px-6 py-4">
                         <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${statusColors[req.status] ?? 'bg-gray-100 text-gray-500'}`}>
                           {req.status?.replace(/_/g, ' ')}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        {reviewable(req.status) && (
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => setConfirmApprove(req)}
-                              className="flex items-center gap-1 text-xs text-green-600 hover:text-green-800 font-medium transition-colors"
-                            >
-                              <CheckCircle size={14} /> Approve
-                            </button>
-                            <span className="text-gray-300">|</span>
-                            <button
-                              onClick={() => { setConfirmReject(req); setRejectionReason(''); setApiError(''); }}
-                              className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 font-medium transition-colors"
-                            >
-                              <XCircle size={14} /> Reject
-                            </button>
-                          </div>
-                        )}
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => setDetailModal(req)}
+                            className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 font-medium transition-colors"
+                          >
+                            <Eye size={13} /> View
+                          </button>
+                          {reviewable(req.status) && (
+                            <>
+                              <button
+                                onClick={() => setConfirmApprove(req)}
+                                className="flex items-center gap-1 text-xs text-green-600 hover:text-green-800 font-medium transition-colors"
+                              >
+                                <CheckCircle size={13} /> Approve
+                              </button>
+                              <button
+                                onClick={() => { setConfirmReject(req); setRejectionReason(''); setApiError(''); }}
+                                className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 font-medium transition-colors"
+                              >
+                                <XCircle size={13} /> Reject
+                              </button>
+                            </>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -158,7 +167,87 @@ export const SupervisorRequests = () => {
         </div>
       </div>
 
-      {/* Approve Modal */}
+      {/* ── Detail Modal ── */}
+      {detailModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 space-y-5 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-gray-800">Request Detail</h3>
+                <p className="text-sm text-gray-500">#{detailModal.id} · {detailModal.required_date}</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className={`px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${statusColors[detailModal.status] ?? 'bg-gray-100 text-gray-500'}`}>
+                  {detailModal.status?.replace(/_/g, ' ')}
+                </span>
+                <button onClick={() => setDetailModal(null)} className="p-1.5 rounded-lg hover:bg-gray-100">
+                  <X size={18} className="text-gray-500" />
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-xl">
+              <DetailRow label="Pickup Location" value={detailModal.pickup_location} />
+              <DetailRow label="Destination" value={detailModal.destination} />
+              <DetailRow label="Date" value={detailModal.required_date} />
+              <DetailRow label="Time" value={`${formatTime(detailModal.required_from_time)} – ${formatTime(detailModal.required_to_time)}`} />
+              <DetailRow label="Working Hours" value={detailModal.working_hours ? 'Yes' : 'No'} />
+              <DetailRow label="Service Type" value={detailModal.service_type} />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-xl">
+              <DetailRow label="Requested By" value={
+                detailModal.requester
+                  ? `${detailModal.requester.first_name} ${detailModal.requester.last_name}`
+                  : '—'
+              } />
+              <DetailRow label="Department" value={detailModal.department?.name ?? detailModal.department?.code} />
+              <DetailRow label="Phone" value={detailModal.telephone_extension} />
+              {detailModal.passenger_count && (
+                <DetailRow label="No. of People" value={detailModal.passenger_count} />
+              )}
+              <DetailRow label="Purpose" value={detailModal.purpose} />
+            </div>
+
+            {detailModal.reviewed_by && (
+              <div className="p-4 bg-gray-50 rounded-xl space-y-3">
+                <p className="text-xs font-semibold text-gray-500 uppercase">Approval Info</p>
+                <DetailRow
+                  label="Approved / Rejected By"
+                  value={`${detailModal.reviewed_by.first_name} ${detailModal.reviewed_by.last_name}`}
+                />
+                <DetailRow label="Reviewed At" value={
+                  detailModal.reviewed_at
+                    ? new Date(detailModal.reviewed_at).toLocaleString()
+                    : '—'
+                } />
+                {detailModal.rejection_reason && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-xs text-red-500 font-medium">Rejection Reason</p>
+                    <p className="text-sm text-red-700 mt-0.5">{detailModal.rejection_reason}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              {reviewable(detailModal.status) && (
+                <>
+                  <Button fullWidth onClick={() => { setDetailModal(null); setConfirmApprove(detailModal); }}>
+                    Approve
+                  </Button>
+                  <Button variant="danger" fullWidth onClick={() => { setDetailModal(null); setConfirmReject(detailModal); setRejectionReason(''); }}>
+                    Reject
+                  </Button>
+                </>
+              )}
+              <Button variant="secondary" fullWidth onClick={() => setDetailModal(null)}>Close</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Approve Modal ── */}
       {confirmApprove && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 space-y-4">
@@ -185,7 +274,7 @@ export const SupervisorRequests = () => {
         </div>
       )}
 
-      {/* Reject Modal */}
+      {/* ── Reject Modal ── */}
       {confirmReject && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 space-y-4">

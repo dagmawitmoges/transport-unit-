@@ -6,20 +6,27 @@ import { z } from 'zod';
 import { StaffLayout } from '../../layout/stafflayouts';
 import { createTransportRequest } from '../../api/transportrequests';
 import { getDepartments } from '../../api/users';
+import { useAuth } from '../../auth/authContext';
 import { Input } from '../../components/input';
 import { Button } from '../../components/button';
 import { Loader2 } from 'lucide-react';
 
+const today = new Date().toISOString().split('T')[0];
+
 const schema = z
   .object({
-    telephone_extension: z.string().min(7, 'Phone number is required'),
+    telephone_extension: z.string().min(1, 'Phone number is required'),
     department_id:       z.string().min(1, 'Department is required'),
-    required_date:       z.string().min(1, 'Required date is required'),
+    required_date:       z.string().min(1, 'Required date is required').refine(
+      (d) => d >= today,
+      { message: 'Date cannot be in the past' }
+    ),
     required_from_time:  z.string().min(1, 'From time is required'),
     required_to_time:    z.string().min(1, 'To time is required'),
     working_hours:       z.boolean(),
+    pickup_location:     z.string().min(1, 'Pickup location is required'),
     destination:         z.string().min(1, 'Destination is required'),
-    purpose:             z.string().min(1, 'Purpose is required'),
+    purpose:             z.string().min(3, 'Purpose is required'),
     service_type:        z.enum(['passenger', 'pickup']),
     passenger_count:     z.number().optional(),
   })
@@ -29,13 +36,14 @@ const schema = z
   })
   .refine(
     (d) => d.service_type !== 'passenger' || (d.passenger_count !== undefined && d.passenger_count > 0),
-    { message: 'Passenger count must be greater than 0', path: ['passenger_count'] }
+    { message: 'No. of people must be greater than 0', path: ['passenger_count'] }
   );
 
 type FormData = z.infer<typeof schema>;
 
 export const CreateRequest = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [submitting, setSubmitting]   = useState(false);
   const [apiError, setApiError]       = useState('');
   const [departments, setDepartments] = useState<any[]>([]);
@@ -51,18 +59,20 @@ export const CreateRequest = () => {
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { working_hours: true, service_type: 'passenger' },
+    defaultValues: {
+      working_hours: true,
+      service_type: 'passenger',
+      telephone_extension: '',
+    },
   });
 
   const serviceType = watch('service_type');
-  const departmentId = watch('department_id');
 
   const onSubmit = async (data: FormData) => {
     setSubmitting(true);
     setApiError('');
     try {
-      // Auto-fill originator_office from selected department
-      const selectedDept = departments.find((d) => d.id === data.department_id);
+      const selectedDept = departments.find((d) => String(d.id) === String(data.department_id));
       const payload = {
         ...data,
         originator_office: selectedDept?.name ?? selectedDept?.code ?? data.department_id,
@@ -91,21 +101,37 @@ export const CreateRequest = () => {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 
+            {/* Requested By — read only */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Requested By</label>
+              <div className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-600">
+                {user ? `${user.first_name} ${user.last_name}` : '—'}
+              </div>
+            </div>
+
             {/* Phone Number */}
-            <Input
-              label="Phone Number"
-              placeholder="e.g. +251911234567"
-              error={errors.telephone_extension?.message}
-              {...register('telephone_extension')}
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Phone Number <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. +251911234567"
+                className={`w-full px-4 py-2.5 bg-white/70 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm ${errors.telephone_extension ? 'border-red-400' : 'border-gray-200'}`}
+                {...register('telephone_extension')}
+              />
+              {errors.telephone_extension && (
+                <p className="mt-1 text-sm text-red-500">{errors.telephone_extension.message}</p>
+              )}
+            </div>
 
             {/* Department */}
-            <div className="w-full">
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 Department <span className="text-red-500">*</span>
               </label>
               <select
-                className={`w-full px-4 py-2.5 bg-white/70 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm ${errors.department_id ? 'border-red-400' : ''}`}
+                className={`w-full px-4 py-2.5 bg-white/70 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm ${errors.department_id ? 'border-red-400' : 'border-gray-200'}`}
                 {...register('department_id')}
               >
                 <option value="">Select your department</option>
@@ -121,27 +147,49 @@ export const CreateRequest = () => {
             </div>
 
             {/* Required Date */}
-            <Input
-              label="Required Date"
-              type="date"
-              error={errors.required_date?.message}
-              {...register('required_date')}
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Required Date <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="date"
+                min={today}
+                className={`w-full px-4 py-2.5 bg-white/70 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm ${errors.required_date ? 'border-red-400' : 'border-gray-200'}`}
+                {...register('required_date')}
+              />
+              {errors.required_date && (
+                <p className="mt-1 text-sm text-red-500">{errors.required_date.message}</p>
+              )}
+            </div>
 
             {/* Time */}
             <div className="grid grid-cols-2 gap-4">
-              <Input
-                label="From Time"
-                type="time"
-                error={errors.required_from_time?.message}
-                {...register('required_from_time')}
-              />
-              <Input
-                label="To Time"
-                type="time"
-                error={errors.required_to_time?.message}
-                {...register('required_to_time')}
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  From Time <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="time"
+                  className={`w-full px-4 py-2.5 bg-white/70 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm ${errors.required_from_time ? 'border-red-400' : 'border-gray-200'}`}
+                  {...register('required_from_time')}
+                />
+                {errors.required_from_time && (
+                  <p className="mt-1 text-sm text-red-500">{errors.required_from_time.message}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  To Time <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="time"
+                  className={`w-full px-4 py-2.5 bg-white/70 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm ${errors.required_to_time ? 'border-red-400' : 'border-gray-200'}`}
+                  {...register('required_to_time')}
+                />
+                {errors.required_to_time && (
+                  <p className="mt-1 text-sm text-red-500">{errors.required_to_time.message}</p>
+                )}
+              </div>
             </div>
 
             {/* Working Hours */}
@@ -157,31 +205,61 @@ export const CreateRequest = () => {
               </label>
             </div>
 
+            {/* Pickup Location */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Pickup Location <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. AU HQ Main Entrance"
+                className={`w-full px-4 py-2.5 bg-white/70 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm ${errors.pickup_location ? 'border-red-400' : 'border-gray-200'}`}
+                {...register('pickup_location')}
+              />
+              {errors.pickup_location && (
+                <p className="mt-1 text-sm text-red-500">{errors.pickup_location.message}</p>
+              )}
+            </div>
+
             {/* Destination */}
-            <Input
-              label="Destination"
-              placeholder="e.g. Addis Ababa Airport"
-              error={errors.destination?.message}
-              {...register('destination')}
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Destination <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. Addis Ababa Airport"
+                className={`w-full px-4 py-2.5 bg-white/70 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm ${errors.destination ? 'border-red-400' : 'border-gray-200'}`}
+                {...register('destination')}
+              />
+              {errors.destination && (
+                <p className="mt-1 text-sm text-red-500">{errors.destination.message}</p>
+              )}
+            </div>
 
             {/* Purpose */}
-            <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Purpose</label>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Purpose <span className="text-red-500">*</span>
+              </label>
               <textarea
                 rows={3}
                 placeholder="Describe the purpose of this trip..."
-                className={`w-full px-4 py-2.5 bg-white/70 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm resize-none ${errors.purpose ? 'border-red-400' : ''}`}
+                className={`w-full px-4 py-2.5 bg-white/70 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm resize-none ${errors.purpose ? 'border-red-400' : 'border-gray-200'}`}
                 {...register('purpose')}
               />
-              {errors.purpose && <p className="mt-1 text-sm text-red-500">{errors.purpose.message}</p>}
+              {errors.purpose && (
+                <p className="mt-1 text-sm text-red-500">{errors.purpose.message}</p>
+              )}
             </div>
 
             {/* Service Type */}
-            <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Service Type</label>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Service Type <span className="text-red-500">*</span>
+              </label>
               <select
-                className={`w-full px-4 py-2.5 bg-white/70 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm ${errors.service_type ? 'border-red-400' : ''}`}
+                className={`w-full px-4 py-2.5 bg-white/70 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm ${errors.service_type ? 'border-red-400' : 'border-gray-200'}`}
                 {...register('service_type')}
               >
                 <option value="passenger">Passenger</option>
@@ -189,16 +267,23 @@ export const CreateRequest = () => {
               </select>
             </div>
 
-            {/* Passenger Count */}
+            {/* No. of People */}
             {serviceType === 'passenger' && (
-              <Input
-                label="Passenger Count"
-                type="number"
-                min={1}
-                placeholder="e.g. 3"
-                error={errors.passenger_count?.message}
-                {...register('passenger_count', { valueAsNumber: true })}
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  No. of People <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  min={1}
+                  placeholder="e.g. 3"
+                  className={`w-full px-4 py-2.5 bg-white/70 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm ${errors.passenger_count ? 'border-red-400' : 'border-gray-200'}`}
+                  {...register('passenger_count', { valueAsNumber: true })}
+                />
+                {errors.passenger_count && (
+                  <p className="mt-1 text-sm text-red-500">{errors.passenger_count.message}</p>
+                )}
+              </div>
             )}
 
             {apiError && (
@@ -219,6 +304,7 @@ export const CreateRequest = () => {
                 ) : 'Submit Request'}
               </Button>
             </div>
+
           </form>
         </div>
       </div>

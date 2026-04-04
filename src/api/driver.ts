@@ -22,7 +22,7 @@ export const getDriverTrips = async () => {
 
 export const updateTripStatus = async (
   requestId: string,
-  data: { status: string; note?: string; location_note?: string }
+  data: { status: string; note?: string; location_note?: string; km_reading?: number }
 ) => {
   const res = await API.post(
     `/api/v1/transport_requests/${requestId}/trip_status_updates`,

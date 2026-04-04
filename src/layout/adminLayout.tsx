@@ -9,9 +9,9 @@ import {
   LogOut,
   Menu,
   ChevronLeft,
-  Truck,
+  
 } from 'lucide-react';
-
+import auLogo from '../../public/au.jfif';
 const navItems = [
   { label: 'Dashboard', to: '/admin/dashboard', icon: LayoutDashboard },
   { label: 'Users',     to: '/admin/users',     icon: Users },
@@ -37,12 +37,12 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       >
         {/* Logo */}
         <div className="flex items-center gap-3 px-4 py-5 border-b border-white/10 min-h-[68px]">
-          <div
-            className="flex items-center justify-center shrink-0 rounded-xl"
-            style={{ width: 40, height: 40, background: 'rgba(255,193,7,0.18)', border: '1.5px solid rgba(255,193,7,0.4)' }}
-          >
-            <Truck size={20} style={{ color: '#FFC107' }} />
-          </div>
+          <img
+  src={auLogo}
+  alt="AU Logo"
+  className="shrink-0 rounded-lg object-cover"
+  style={{ width: 40, height: 40 }}
+/>
           {!collapsed && (
             <div>
               <p className="font-bold text-white text-sm tracking-wide">Transport MS</p>
