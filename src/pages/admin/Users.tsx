@@ -144,34 +144,34 @@ export const Users = () => {
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
                   <tr>
-                    <th className="px-6 py-3 text-left font-medium">Name</th>
-                    <th className="px-6 py-3 text-left font-medium">Email</th>
-                    <th className="px-6 py-3 text-left font-medium">Role</th>
-                    <th className="px-6 py-3 text-left font-medium">Department</th>
-                    <th className="px-6 py-3 text-left font-medium">Status</th>
-                    <th className="px-6 py-3 text-left font-medium">Actions</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Name</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Email</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Role</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Department</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Status</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {filtered.map((user) => (
                     <tr key={user.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 font-medium text-gray-800">
+                      <td className="px-3 py-3 md:px-6 md:py-4 font-medium text-gray-800">
                         {user.full_name ?? `${user.first_name ?? ''} ${user.last_name ?? ''}`.trim()}
                       </td>
-                      <td className="px-6 py-4 text-gray-500">{user.email}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500">{user.email}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4">
                         <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${roleBadgeColors[user.role] ?? 'bg-gray-100 text-gray-500'}`}>
                           {user.role?.replace(/_/g, ' ')}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-gray-500">
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500">
 {user.department?.code ?? '—'}                      </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-3 md:px-6 md:py-4">
                         <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${user.active === false ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-700'}`}>
                           {user.active === false ? 'Inactive' : 'Active'}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-3 md:px-6 md:py-4">
                         {user.active !== false && currentUser?.id !== user.id && (
   <button
     onClick={() => setConfirmDeactivate(user)}
@@ -193,7 +193,7 @@ export const Users = () => {
       {/* ── Create User Modal ── */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 space-y-5">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-h-[90vh] overflow-y-auto max-w-lg p-6 space-y-5">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold text-gray-800">Create New User</h3>
               <button onClick={() => setShowModal(false)} className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors">
@@ -202,7 +202,7 @@ export const Users = () => {
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Input
                   label="First Name"
                   placeholder="John"
@@ -233,7 +233,7 @@ export const Users = () => {
                 {...register('password')}
               />
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Role Select */}
                 <div className="w-full">
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">Role</label>
@@ -299,7 +299,7 @@ export const Users = () => {
       {/* ── Confirm Deactivate Modal ── */}
       {confirmDeactivate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 space-y-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-h-[90vh] overflow-y-auto max-w-sm p-6 space-y-4">
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center w-10 h-10 bg-red-100 rounded-xl">
                 <ShieldAlert size={20} className="text-red-500" />

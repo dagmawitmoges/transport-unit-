@@ -78,7 +78,7 @@ export const AdminDashboard = () => {
           {/* 🌿 TABLE */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
             
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <div className="flex items-center justify-between px-3 py-3 md:px-6 md:py-4 border-b border-gray-100">
               <h3 className="font-semibold text-gray-700">
                 Recent Transport Requests
               </h3>
@@ -101,11 +101,11 @@ export const AdminDashboard = () => {
                   
                   <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
                     <tr>
-                      <th className="px-6 py-3 text-left">ID</th>
-                      <th className="px-6 py-3 text-left">Destination</th>
-                      <th className="px-6 py-3 text-left">Purpose</th>
-                      <th className="px-6 py-3 text-left">Status</th>
-                      <th className="px-6 py-3 text-left">Date</th>
+                      <th className="px-3 py-3 md:px-6 text-left">ID</th>
+                      <th className="px-3 py-3 md:px-6 text-left">Destination</th>
+                      <th className="px-3 py-3 md:px-6 text-left">Purpose</th>
+                      <th className="px-3 py-3 md:px-6 text-left">Status</th>
+                      <th className="px-3 py-3 md:px-6 text-left">Date</th>
                     </tr>
                   </thead>
 
@@ -115,23 +115,23 @@ export const AdminDashboard = () => {
                         key={req.id}
                         className="hover:bg-gray-50 transition"
                       >
-                        <td className="px-6 py-4 text-gray-400">
+                        <td className="px-3 py-3 md:px-6 md:py-4 text-gray-400">
                           #{req.id}
                         </td>
 
-                        <td className="px-6 py-4 font-medium text-gray-800">
+                        <td className="px-3 py-3 md:px-6 md:py-4 font-medium text-gray-800">
                           {req.destination ?? '—'}
                         </td>
 
-                        <td className="px-6 py-4 text-gray-500 truncate max-w-xs">
+                        <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500 truncate max-w-xs">
                           {req.purpose ?? '—'}
                         </td>
 
-                        <td className="px-6 py-4">
+                        <td className="px-3 py-3 md:px-6 md:py-4">
                           <StatusBadge status={req.status} />
                         </td>
 
-                        <td className="px-6 py-4 text-gray-400">
+                        <td className="px-3 py-3 md:px-6 md:py-4 text-gray-400">
                           {req.required_date ??
                             req.created_at?.split('T')[0] ??
                             '—'}

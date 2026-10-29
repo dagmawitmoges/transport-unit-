@@ -112,37 +112,37 @@ export const DriverTrips = () => {
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
                   <tr>
-                    <th className="px-6 py-3 text-left font-medium">ID</th>
-                    <th className="px-6 py-3 text-left font-medium">Requester</th>
-                    <th className="px-6 py-3 text-left font-medium">Destination</th>
-                    <th className="px-6 py-3 text-left font-medium">Date</th>
-                    <th className="px-6 py-3 text-left font-medium">Time</th>
-                    <th className="px-6 py-3 text-left font-medium">Passengers</th>
-                    <th className="px-6 py-3 text-left font-medium">Vehicle</th>
-                    <th className="px-6 py-3 text-left font-medium">Status</th>
-                    <th className="px-6 py-3 text-left font-medium">Action</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">ID</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Requester</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Destination</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Date</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Time</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Passengers</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Vehicle</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Status</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {trips.map((trip) => (
                     <tr key={trip.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 text-gray-500">#{trip.id}</td>
-                      <td className="px-6 py-4 font-medium text-gray-800">
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500">#{trip.id}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 font-medium text-gray-800">
                         {trip.requester ? `${trip.requester.first_name} ${trip.requester.last_name}` : '—'}
                       </td>
-                      <td className="px-6 py-4 text-gray-600">{trip.destination}</td>
-                      <td className="px-6 py-4 text-gray-500">{trip.required_date}</td>
-                      <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-600">{trip.destination}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500">{trip.required_date}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500 whitespace-nowrap">
                         {formatTime(trip.required_from_time)} – {formatTime(trip.required_to_time)}
                       </td>
-                      <td className="px-6 py-4 text-gray-500">{trip.passenger_count ?? '—'}</td>
-                      <td className="px-6 py-4 text-gray-500">{trip.vehicle?.plate_number ?? '—'}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500">{trip.passenger_count ?? '—'}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500">{trip.vehicle?.plate_number ?? '—'}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4">
                         <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${statusColors[trip.status] ?? 'bg-gray-100 text-gray-500'}`}>
                           {trip.status?.replace(/_/g, ' ')}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-3 md:px-6 md:py-4">
                         {(trip.status === 'assigned' || trip.status === 'in_progress') && (
                           <button
                             onClick={() => openComplete(trip)}
@@ -164,7 +164,7 @@ export const DriverTrips = () => {
       {modalTrip && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setModalTrip(null)} />
-          <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
+          <div className="relative bg-white rounded-2xl shadow-xl w-full max-h-[90vh] overflow-y-auto max-w-md p-6 space-y-4">
             <div className="flex items-start justify-between">
               <div>
                 <h3 className="text-lg font-semibold text-gray-800">Complete trip #{modalTrip.id}</h3>

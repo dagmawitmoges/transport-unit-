@@ -41,20 +41,20 @@ export const Vehicles = () => {
                 <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
                   <tr>
                     {['Plate', 'Make', 'Model', 'Year', 'Type', 'Capacity', 'Status'].map((h) => (
-                      <th key={h} className="px-6 py-3 text-left font-medium">{h}</th>
+                      <th key={h} className="px-3 py-3 md:px-6 text-left font-medium">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {vehicles.map((v) => (
                     <tr key={v.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 font-medium text-gray-800">{v.plate_number}</td>
-                      <td className="px-6 py-4 text-gray-600">{v.make}</td>
-                      <td className="px-6 py-4 text-gray-600">{v.model}</td>
-                      <td className="px-6 py-4 text-gray-500">{v.year ?? '—'}</td>
-                      <td className="px-6 py-4 text-gray-500 capitalize">{v.vehicle_type}</td>
-                      <td className="px-6 py-4 text-gray-500">{v.capacity ?? '—'} seats</td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-3 md:px-6 md:py-4 font-medium text-gray-800">{v.plate_number}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-600">{v.make}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-600">{v.model}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500">{v.year ?? '—'}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500 capitalize">{v.vehicle_type}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500">{v.capacity ?? '—'} seats</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4">
                         <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${statusColors[v.status] ?? 'bg-gray-100 text-gray-500'}`}>
                           {v.status?.replace(/_/g, ' ')}
                         </span>

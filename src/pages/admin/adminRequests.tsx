@@ -65,14 +65,14 @@ export const AdminRequests = () => {
         {/* Filters */}
         <div className="flex flex-wrap gap-3">
           {/* Search */}
-          <div className="relative">
+          <div className="relative w-full sm:w-auto">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Search destination, purpose, requester..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 w-72"
+              className="pl-9 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 w-full sm:w-72"
             />
           </div>
 
@@ -80,7 +80,7 @@ export const AdminRequests = () => {
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 capitalize"
+            className="w-full sm:w-auto px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 capitalize"
           >
             {STATUS_OPTIONS.map((s) => (
               <option key={s} value={s} className="capitalize">
@@ -94,7 +94,7 @@ export const AdminRequests = () => {
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full sm:w-auto px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
 
           {/* Clear filters */}
@@ -123,35 +123,35 @@ export const AdminRequests = () => {
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
                   <tr>
-                    <th className="px-6 py-3 text-left font-medium">ID</th>
-                    <th className="px-6 py-3 text-left font-medium">Requester</th>
-                    <th className="px-6 py-3 text-left font-medium">Destination</th>
-                    <th className="px-6 py-3 text-left font-medium">Purpose</th>
-                    <th className="px-6 py-3 text-left font-medium">Date</th>
-                    <th className="px-6 py-3 text-left font-medium">Time</th>
-                    <th className="px-6 py-3 text-left font-medium">Service</th>
-                    <th className="px-6 py-3 text-left font-medium">Dept</th>
-                    <th className="px-6 py-3 text-left font-medium">Status</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">ID</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Requester</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Destination</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Purpose</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Date</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Time</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Service</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Dept</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {filtered.map((req) => (
                     <tr key={req.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 text-gray-500">#{req.id}</td>
-                      <td className="px-6 py-4 font-medium text-gray-800">
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500">#{req.id}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 font-medium text-gray-800">
                         {req.requester
                           ? `${req.requester.first_name} ${req.requester.last_name}`
                           : '—'}
                       </td>
-                      <td className="px-6 py-4 text-gray-800 font-medium">{req.destination ?? '—'}</td>
-                      <td className="px-6 py-4 text-gray-500 max-w-xs truncate">{req.purpose ?? '—'}</td>
-                      <td className="px-6 py-4 text-gray-500">{req.required_date ?? '—'}</td>
-                      <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-800 font-medium">{req.destination ?? '—'}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500 max-w-xs truncate">{req.purpose ?? '—'}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500">{req.required_date ?? '—'}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500 whitespace-nowrap">
                         {formatTime(req.required_from_time)} – {formatTime(req.required_to_time)}
                       </td>
-                      <td className="px-6 py-4 text-gray-500 capitalize">{req.service_type ?? '—'}</td>
-                      <td className="px-6 py-4 text-gray-500">{req.department?.code ?? '—'}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500 capitalize">{req.service_type ?? '—'}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500">{req.department?.code ?? '—'}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4">
                         <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${statusColors[req.status] ?? 'bg-gray-100 text-gray-500'}`}>
                           {req.status ?? 'unknown'}
                         </span>

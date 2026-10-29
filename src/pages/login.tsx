@@ -71,7 +71,7 @@ export const Login = () => {
    return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-8">
+        <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-6 sm:p-8">
           <div className="text-center mb-8">
             <img src="/au-logo.png" alt="African Union" className="h-24 mx-auto mb-4" />
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-2">
