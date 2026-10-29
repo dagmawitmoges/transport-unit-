@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/authContext';
-import { loginRequest } from '../api/auth';
+import { loginRequest, googleLoginRequest } from '../api/auth';
+import { GoogleLogin } from '@react-oauth/google';
 import { Input } from '../components/input';
 import { Button } from '../components/button';
 import { LogIn } from 'lucide-react';
@@ -14,6 +15,22 @@ export const Login = () => {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  const handleGoogle = async (credential?: string) => {
+    setError('');
+    if (!credential) {
+      setError('Google did not return a credential. Please try again.');
+      return;
+    }
+    try {
+      const res = await googleLoginRequest(credential);
+      const { access_token, user } = res.data;
+      login(access_token, user);
+      navigate(user.role === 'admin' ? '/admin/dashboard' : '/staff/dashboard');
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Google sign-in failed');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,6 +79,14 @@ export const Login = () => {
             </h1>
             <p className="text-gray-600">Sign in to your account</p>
           </div>
+
+          <div className="flex justify-center mb-4">
+            <GoogleLogin
+              onSuccess={(res) => handleGoogle(res.credential)}
+              onError={() => setError('Google sign-in was cancelled or failed.')}
+            />
+          </div>
+          <p className="text-center text-xs text-gray-500 mb-4">or sign in with email</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input

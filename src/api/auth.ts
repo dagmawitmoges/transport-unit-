@@ -15,4 +15,10 @@ export const loginRequest = async (email: string, password: string) => {
   return response.data; 
 };
 
+export const googleLoginRequest = async (credential: string) => {
+  const response = await API.post("/api/v1/auth/google", {
+    auth: { credential },
+  });
 
+  return response.data;
+};
