@@ -38,7 +38,7 @@ export const StaffLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
-      <aside className={`${collapsed ? 'w-16' : 'w-64'} bg-[#0f2f2a] text-white flex flex-col transition-all duration-300 ease-in-out shrink-0`}>
+      <aside className={`${collapsed ? 'w-16' : 'w-64'} bg-[#6b1526] text-white flex flex-col transition-all duration-300 ease-in-out shrink-0`}>
         <div className="flex items-center gap-3 px-4 py-5 border-b border-gray-700 min-h-[64px]">
           <div className="flex items-center justify-center w-9 h-9 bg-blue-500 rounded-lg shrink-0">
             <Truck size={20} className="text-white" />
