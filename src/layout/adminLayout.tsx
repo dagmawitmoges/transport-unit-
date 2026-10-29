@@ -6,6 +6,7 @@ import {
   Users,
   Car,
   FileText,
+  BarChart3,
   LogOut,
   Menu,
   X,
@@ -16,6 +17,7 @@ const navItems = [
   { label: 'Users', to: '/admin/users', icon: Users },
   { label: 'Vehicles', to: '/admin/vehicles', icon: Car },
   { label: 'Requests', to: '/admin/requests', icon: FileText },
+  { label: 'Reports', to: '/admin/reports', icon: BarChart3 },
 ];
 
 export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
