@@ -6,6 +6,9 @@ import { GoogleLogin } from '@react-oauth/google';
 import { Input } from '../components/input';
 import { Button } from '../components/button';
 
+const homeFor = (role: string) =>
+  role === 'admin' ? '/admin/dashboard' : role === 'driver' ? '/staff/trips' : '/staff/dashboard';
+
 export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,7 +28,7 @@ export const Login = () => {
       const res = await googleLoginRequest(credential);
       const { access_token, user } = res.data;
       login(access_token, user);
-      navigate(user.role === 'admin' ? '/admin/dashboard' : '/staff/dashboard');
+      navigate(homeFor(user.role));
     } catch (err: any) {
       setError(err.response?.data?.error || 'Google sign-in failed');
     }
@@ -52,7 +55,7 @@ export const Login = () => {
 
     login(token, user);
 
-    const destination = user.role === 'admin' ? '/admin/dashboard' : '/staff/dashboard';
+    const destination = homeFor(user.role);
     console.log('Navigating to:', destination);  // Where is it trying to go?
     
     navigate(destination);
