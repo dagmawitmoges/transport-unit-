@@ -65,12 +65,12 @@ export const AdminDashboard = () => {
           </div>
 
           {/* 🌿 ACTION CARD */}
-          <div className="bg-gradient-to-r from-[#952038] to-[#a8283f] text-white rounded-2xl p-6 shadow">
+          <div className="bg-gradient-to-r from-[#1f5c52] to-[#2f7d70] text-white rounded-2xl p-6 shadow">
             <h3 className="text-lg font-semibold">Quick Action</h3>
             <p className="mt-2 text-sm opacity-90">
               Review and approve pending transport requests
             </p>
-            <button className="mt-4 bg-white text-[#952038] px-4 py-2 rounded-lg text-sm font-medium">
+            <button className="mt-4 bg-white text-[#1f5c52] px-4 py-2 rounded-lg text-sm font-medium">
               Go to Requests
             </button>
           </div>
@@ -89,7 +89,7 @@ export const AdminDashboard = () => {
 
             {loading ? (
               <div className="flex items-center justify-center py-16">
-                <Loader2 size={28} className="animate-spin text-[#952038]" />
+                <Loader2 size={28} className="animate-spin text-[#1f5c52]" />
               </div>
             ) : requests.length === 0 ? (
               <div className="text-center py-16 text-gray-400 text-sm">
@@ -152,7 +152,7 @@ export const AdminDashboard = () => {
           <StatCard
             label="Total Users"
             value={users.length}
-            icon={<Users size={20} className="text-[#952038]" />}
+            icon={<Users size={20} className="text-[#1f5c52]" />}
             color="bg-[#e6f4f1]"
             loading={loading}
           />
@@ -160,7 +160,7 @@ export const AdminDashboard = () => {
           <StatCard
             label="Requests"
             value={requests.length}
-            icon={<FileText size={20} className="text-[#a8283f]" />}
+            icon={<FileText size={20} className="text-[#2f7d70]" />}
             color="bg-[#eaf7f4]"
             loading={loading}
           />

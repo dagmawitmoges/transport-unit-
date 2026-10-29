@@ -6,17 +6,15 @@ export default {
   ],
   theme: {
     extend: {
-      // African Union brand (same palette as the Koha library theme):
-      // AU red #952038, dark red #6B1526, gold #C0A265, light grey #F4F4F2.
-      // The blue/purple/pink palettes are remapped so every page shares it.
+      // African Union green (matches the admin layout's #1f5c52).
+      // The blue/purple/pink palettes are remapped so every page shares the brand.
       colors: {
         blue: {
-          50: '#fbf1f3', 100: '#f5dde2', 200: '#ebbcc5', 300: '#dc8f9e', 400: '#c35a70',
-          500: '#a8283f', 600: '#952038', 700: '#6b1526', 800: '#560f1e', 900: '#3f0b16',
+          50: '#f0f7f5', 100: '#dcece8', 200: '#b9d9d1', 300: '#8fc1b6', 400: '#5da394',
+          500: '#2f7d70', 600: '#1f5c52', 700: '#194a42', 800: '#143b35', 900: '#0f2d28',
         },
-        purple: { 50: '#f4f4f2', 100: '#e9e9e5' },
-        pink: { 50: '#f8f3e8', 100: '#efe4cb' },
-        au: { red: '#952038', 'red-dark': '#6b1526', gold: '#c0a265', grey: '#f4f4f2' },
+        purple: { 50: '#f6f9f8', 100: '#e8f0ed' },
+        pink: { 50: '#faf6e8', 100: '#f3ead0' },
       },
     },
   },

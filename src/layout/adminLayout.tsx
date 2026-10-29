@@ -30,17 +30,17 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <div className="flex h-screen bg-[#f4f4f2] overflow-hidden">
+    <div className="flex h-screen bg-[#f6f9f8] overflow-hidden">
       
       {/* 🌿 SIDEBAR */}
       <aside
         className={`${
           collapsed ? 'w-20' : 'w-64'
-        } bg-[#6b1526] text-white flex flex-col transition-all duration-300`}
+        } bg-[#0f2f2a] text-white flex flex-col transition-all duration-300`}
       >
         {/* Logo */}
         <div className="flex items-center gap-3 px-4 py-5 border-b border-white/10">
-          <div className="flex items-center justify-center w-10 h-10 bg-[#952038] rounded-xl shadow-md">
+          <div className="flex items-center justify-center w-10 h-10 bg-[#1f5c52] rounded-xl shadow-md">
             <Truck size={20} className="text-white" />
           </div>
           {!collapsed && (
@@ -59,7 +59,7 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
                   isActive
-                    ? 'bg-[#952038] text-white shadow'
+                    ? 'bg-[#1f5c52] text-white shadow'
                     : 'text-white/60 hover:bg-white/10 hover:text-white'
                 }`
               }
@@ -127,7 +127,7 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               </p>
             </div>
 
-            <div className="w-10 h-10 rounded-full bg-[#952038] flex items-center justify-center text-white font-semibold shadow">
+            <div className="w-10 h-10 rounded-full bg-[#1f5c52] flex items-center justify-center text-white font-semibold shadow">
               {user?.first_name?.charAt(0)}
             </div>
           </div>
