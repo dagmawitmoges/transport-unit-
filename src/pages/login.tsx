@@ -5,7 +5,6 @@ import { loginRequest, googleLoginRequest } from '../api/auth';
 import { GoogleLogin } from '@react-oauth/google';
 import { Input } from '../components/input';
 import { Button } from '../components/button';
-import { LogIn } from 'lucide-react';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
@@ -71,11 +70,9 @@ export const Login = () => {
       <div className="w-full max-w-md">
         <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-8">
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl mb-4 shadow-lg">
-              <LogIn className="text-white" size={32} />
-            </div>
+            <img src="/au-logo.png" alt="African Union" className="h-24 mx-auto mb-4" />
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-2">
-              Transport MS
+              AU Transport Dispatching
             </h1>
             <p className="text-gray-600">Sign in to your account</p>
           </div>
@@ -120,8 +117,19 @@ export const Login = () => {
 
           <div className="mt-6 p-4 bg-blue-50/50 rounded-xl">
             <p className="text-xs text-gray-600 font-semibold mb-2">Demo Accounts:</p>
-            <p className="text-xs text-gray-600">Admin: admin@au.int</p>
-            <p className="text-xs text-gray-600">Dispatcher: dispatcher@au.int</p>
+            {[
+              ['Admin', 'admin@au.int'],
+              ['Requester', 'requester@au.int'],
+              ['Supervisor', 'hr.supervisor@au.int'],
+              ['Director', 'director@au.int'],
+              ['Dispatcher', 'dispatcher@au.int'],
+              ['Dispatch supervisor', 'dispatch.supervisor@au.int'],
+              ['Driver', 'driver1@au.int'],
+            ].map(([role, email]) => (
+              <p key={email} className="text-xs text-gray-600">
+                {role}: {email}
+              </p>
+            ))}
             <p className="text-xs text-gray-500 mt-1 italic">Password: Password1!</p>
           </div>
         </div>

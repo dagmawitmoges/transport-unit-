@@ -40,10 +40,10 @@ export const StaffLayout = ({ children }: { children: React.ReactNode }) => {
     <div className="flex h-screen bg-gray-50 overflow-hidden">
       <aside className={`${collapsed ? 'w-16' : 'w-64'} bg-[#0f2f2a] text-white flex flex-col transition-all duration-300 ease-in-out shrink-0`}>
         <div className="flex items-center gap-3 px-4 py-5 border-b border-gray-700 min-h-[64px]">
-          <div className="flex items-center justify-center w-9 h-9 bg-blue-500 rounded-lg shrink-0">
-            <Truck size={20} className="text-white" />
+          <div className="flex items-center justify-center w-9 h-9 bg-white rounded-lg shrink-0">
+            <img src="/au-logo.png" alt="African Union" className="w-6 h-6 object-contain" />
           </div>
-          {!collapsed && <span className="font-bold text-base tracking-tight whitespace-nowrap">Transport MS</span>}
+          {!collapsed && <span className="font-bold text-base tracking-tight whitespace-nowrap">AU Transport</span>}
         </div>
 
         <nav className="flex-1 py-4 space-y-1 px-2 overflow-y-auto">

@@ -9,7 +9,6 @@ import {
   LogOut,
   Menu,
   X,
-  Truck,
 } from 'lucide-react';
 
 const navItems = [
@@ -40,12 +39,12 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       >
         {/* Logo */}
         <div className="flex items-center gap-3 px-4 py-5 border-b border-white/10">
-          <div className="flex items-center justify-center w-10 h-10 bg-[#1f5c52] rounded-xl shadow-md">
-            <Truck size={20} className="text-white" />
+          <div className="flex items-center justify-center w-10 h-10 bg-white rounded-xl shadow-md shrink-0">
+            <img src="/au-logo.png" alt="African Union" className="w-7 h-7 object-contain" />
           </div>
           {!collapsed && (
             <span className="font-semibold text-lg tracking-tight">
-              Transport
+              AU Transport
             </span>
           )}
         </div>
