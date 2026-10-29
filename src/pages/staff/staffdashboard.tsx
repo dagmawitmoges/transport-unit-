@@ -78,7 +78,7 @@ export const StaffDashboard = () => {
 
         {/* Recent Requests */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
-          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+          <div className="px-3 py-3 md:px-6 md:py-4 border-b border-gray-100 flex items-center justify-between">
             <h3 className="font-semibold text-gray-700">Recent Requests</h3>
             <button onClick={() => navigate('/staff/requests')} className="text-sm text-blue-600 hover:underline">
               View all
@@ -102,21 +102,21 @@ export const StaffDashboard = () => {
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
                   <tr>
-                    <th className="px-6 py-3 text-left font-medium">Destination</th>
-                    <th className="px-6 py-3 text-left font-medium">Department</th>
-                    <th className="px-6 py-3 text-left font-medium">Purpose</th>
-                    <th className="px-6 py-3 text-left font-medium">Date</th>
-                    <th className="px-6 py-3 text-left font-medium">Status</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Destination</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Department</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Purpose</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Date</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {requests.slice(0, 5).map((req) => (
                     <tr key={req.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 font-medium text-gray-800">{req.destination}</td>
-                      <td className="px-6 py-4 text-gray-500">{req.department?.name ?? req.department?.code ?? '—'}</td>
-                      <td className="px-6 py-4 text-gray-500 max-w-xs truncate">{req.purpose}</td>
-                      <td className="px-6 py-4 text-gray-500">{req.required_date}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-3 md:px-6 md:py-4 font-medium text-gray-800">{req.destination}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500">{req.department?.name ?? req.department?.code ?? '—'}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500 max-w-xs truncate">{req.purpose}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500">{req.required_date}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4">
                         <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${statusColors[req.status] ?? 'bg-gray-100 text-gray-500'}`}>
                           {req.status}
                         </span>

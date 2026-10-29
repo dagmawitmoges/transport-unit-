@@ -29,7 +29,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
         className="absolute inset-0 bg-black/30 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6">
+      <div className="relative bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 max-h-[90vh] overflow-y-auto">
         {title && (
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-gray-800">{title}</h2>

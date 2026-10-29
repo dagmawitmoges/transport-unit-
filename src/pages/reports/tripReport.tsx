@@ -26,7 +26,7 @@ const deptLabel = (name: string | null) => {
 };
 
 const inputClass =
-  'px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400';
+  'w-full sm:w-auto px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400';
 
 const ReportContent = () => {
   const [filters, setFilters]         = useState<ReportFilters>({});
@@ -80,7 +80,7 @@ const ReportContent = () => {
         <button
           onClick={handleExport}
           disabled={exporting || rows.length === 0}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1f5c52] text-white text-sm font-medium shadow hover:bg-[#194a42] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="w-full sm:w-auto justify-center flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1f5c52] text-white text-sm font-medium shadow hover:bg-[#194a42] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {exporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
           Export to Excel
@@ -88,11 +88,11 @@ const ReportContent = () => {
       </div>
 
       <div className="flex flex-wrap gap-3 items-end">
-        <label className="text-xs text-gray-500">
+        <label className="text-xs text-gray-500 w-full sm:w-auto">
           From
           <input type="date" value={filters.from ?? ''} onChange={(e) => set('from', e.target.value)} className={`${inputClass} block mt-1`} />
         </label>
-        <label className="text-xs text-gray-500">
+        <label className="text-xs text-gray-500 w-full sm:w-auto">
           To
           <input type="date" value={filters.to ?? ''} onChange={(e) => set('to', e.target.value)} className={`${inputClass} block mt-1`} />
         </label>
@@ -109,7 +109,7 @@ const ReportContent = () => {
           {vehicles.map((v) => <option key={v.id} value={v.id}>{v.plate_number}</option>)}
         </select>
         {hasFilters && (
-          <button onClick={() => setFilters({})} className="px-4 py-2.5 text-sm text-gray-500 hover:text-gray-700 bg-white border border-gray-200 rounded-xl">
+          <button onClick={() => setFilters({})} className="w-full sm:w-auto px-4 py-2.5 text-sm text-gray-500 hover:text-gray-700 bg-white border border-gray-200 rounded-xl">
             Clear filters
           </button>
         )}

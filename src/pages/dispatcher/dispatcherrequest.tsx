@@ -109,35 +109,35 @@ export const DispatcherRequests = () => {
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
                   <tr>
-                    <th className="px-6 py-3 text-left font-medium">ID</th>
-                    <th className="px-6 py-3 text-left font-medium">Requester</th>
-                    <th className="px-6 py-3 text-left font-medium">Destination</th>
-                    <th className="px-6 py-3 text-left font-medium">Date</th>
-                    <th className="px-6 py-3 text-left font-medium">Time</th>
-                    <th className="px-6 py-3 text-left font-medium">Service</th>
-                    <th className="px-6 py-3 text-left font-medium">Status</th>
-                    <th className="px-6 py-3 text-left font-medium">Actions</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">ID</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Requester</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Destination</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Date</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Time</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Service</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Status</th>
+                    <th className="px-3 py-3 md:px-6 text-left font-medium">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {requests.map((req) => (
                     <tr key={req.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 text-gray-500">#{req.id}</td>
-                      <td className="px-6 py-4 font-medium text-gray-800">
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500">#{req.id}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 font-medium text-gray-800">
                         {req.requester ? `${req.requester.first_name} ${req.requester.last_name}` : '—'}
                       </td>
-                      <td className="px-6 py-4 text-gray-800">{req.destination}</td>
-                      <td className="px-6 py-4 text-gray-500">{req.required_date}</td>
-                      <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-800">{req.destination}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500">{req.required_date}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500 whitespace-nowrap">
                         {formatTime(req.required_from_time)} – {formatTime(req.required_to_time)}
                       </td>
-                      <td className="px-6 py-4 text-gray-500 capitalize">{req.service_type}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-3 md:px-6 md:py-4 text-gray-500 capitalize">{req.service_type}</td>
+                      <td className="px-3 py-3 md:px-6 md:py-4">
                         <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${statusColors[req.status] ?? 'bg-gray-100 text-gray-500'}`}>
                           {req.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-3 md:px-6 md:py-4">
                         <button
                           onClick={() => openAssign(req)}
                           className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 font-medium transition-colors"
@@ -157,7 +157,7 @@ export const DispatcherRequests = () => {
       {/* Assign Modal */}
       {assignModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-5">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-h-[90vh] overflow-y-auto max-w-md p-6 space-y-5">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-bold text-gray-800">Assign Request #{assignModal.id}</h3>
