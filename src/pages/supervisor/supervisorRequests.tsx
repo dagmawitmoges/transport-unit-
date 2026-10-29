@@ -4,6 +4,7 @@ import { getMyTransportRequests } from '../../api/transportrequests';
 import { approveRequest, rejectRequest } from '../../api/supervisor';
 import { Button } from '../../components/button';
 import { Loader2, CheckCircle, XCircle, ShieldAlert } from 'lucide-react';
+import { formatTime } from '../../utils/time';
 
 const statusColors: Record<string, string> = {
   pending:      'bg-yellow-100 text-yellow-700',
@@ -13,11 +14,6 @@ const statusColors: Record<string, string> = {
   assigned:     'bg-blue-100 text-blue-700',
   completed:    'bg-gray-100 text-gray-600',
   cancelled:    'bg-red-50 text-red-400',
-};
-
-const formatTime = (iso: string) => {
-  if (!iso) return '—';
-  return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
 
 export const SupervisorRequests = () => {

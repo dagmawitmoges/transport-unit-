@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { AdminLayout } from '../../layout/adminLayout';
 import { getTransportRequests } from '../../api/admin';
 import { Loader2, Search } from 'lucide-react';
+import { formatTime } from '../../utils/time';
 
 const statusColors: Record<string, string> = {
   pending:   'bg-yellow-100 text-yellow-700',
@@ -52,12 +53,6 @@ export const AdminRequests = () => {
   });
 
   // format time from full ISO to HH:MM
-  const formatTime = (iso: string) => {
-    if (!iso) return '—';
-    const d = new Date(iso);
-    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  };
-
   return (
     <AdminLayout>
       <div className="space-y-6">
