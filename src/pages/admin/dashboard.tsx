@@ -48,6 +48,12 @@ export const AdminDashboard = () => {
         {/* LEFT */}
         <div className="lg:col-span-2 space-y-6">
 
+          {error && (
+            <div className="p-3 bg-red-100 border border-red-300 text-red-700 rounded-xl text-sm">
+              {error}
+            </div>
+          )}
+
           {/* 🌿 WELCOME CARD */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
             <h2 className="text-xl font-semibold text-gray-800">
