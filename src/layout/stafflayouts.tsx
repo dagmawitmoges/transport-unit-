@@ -38,7 +38,7 @@ export const StaffLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
-      <aside className={`${collapsed ? 'w-16' : 'w-64'} bg-gray-900 text-white flex flex-col transition-all duration-300 ease-in-out shrink-0`}>
+      <aside className={`${collapsed ? 'w-16' : 'w-64'} bg-[#0f2f2a] text-white flex flex-col transition-all duration-300 ease-in-out shrink-0`}>
         <div className="flex items-center gap-3 px-4 py-5 border-b border-gray-700 min-h-[64px]">
           <div className="flex items-center justify-center w-9 h-9 bg-blue-500 rounded-lg shrink-0">
             <Truck size={20} className="text-white" />
@@ -53,7 +53,7 @@ export const StaffLayout = ({ children }: { children: React.ReactNode }) => {
               to={to}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  isActive ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                  isActive ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-white/10 hover:text-white'
                 }`
               }
             >
@@ -72,7 +72,7 @@ export const StaffLayout = ({ children }: { children: React.ReactNode }) => {
           )}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-colors"
+            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
           >
             <LogOut size={18} className="shrink-0" />
             {!collapsed && <span>Logout</span>}
