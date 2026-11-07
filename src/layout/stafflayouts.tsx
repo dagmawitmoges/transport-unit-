@@ -8,6 +8,7 @@ import {
   ClipboardCheck,
   Truck,
   Car,
+  BarChart3,
   LogOut,
   Menu,
   ChevronLeft,
@@ -24,6 +25,7 @@ const allNavItems = [
   { label: 'My Requests', to: '/staff/requests', icon: FileText,       roles: ['requester'] },
   { label: 'Review',      to: '/staff/review',   icon: ClipboardCheck, roles: ['supervisor', 'director'] },
   { label: 'Dispatch',    to: '/staff/dispatch', icon: Truck,          roles: ['dispatcher', 'dispatcher_supervisor'] },
+  { label: 'Reports',     to: '/staff/reports',  icon: BarChart3,      roles: ['dispatcher', 'dispatcher_supervisor'] },
   { label: 'My Trips',    to: '/staff/trips',    icon: Car,            roles: ['driver'] },
 ];
 

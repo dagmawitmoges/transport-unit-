@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { AdminLayout } from '../../layout/adminLayout';
 import { getTransportRequests, getRequestDetail } from '../../api/admin';
 import { Loader2, Search, X, Gauge } from 'lucide-react';
+import { formatTime } from '../../utils/time';
 
 const statusColors: Record<string, string> = {
   pending:     'bg-yellow-100 text-yellow-700',
@@ -28,11 +29,6 @@ const DetailRow = ({ label, value }: { label: string; value: any }) => (
     <p className="text-sm font-medium text-gray-800">{value || '—'}</p>
   </div>
 );
-
-const formatTime = (iso: string) => {
-  if (!iso) return '—';
-  return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-};
 
 const SectionTitle = ({ title }: { title: string }) => (
   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{title}</p>

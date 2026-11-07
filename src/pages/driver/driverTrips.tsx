@@ -3,6 +3,7 @@ import { StaffLayout } from '../../layout/stafflayouts';
 import { getDriverTrips, updateTripStatus, getTripStatusUpdates } from '../../api/driver';
 import { Button } from '../../components/button';
 import { Loader2, MapPin, X, ChevronRight, Gauge, CheckCircle2, Car } from 'lucide-react';
+import { formatTime } from '../../utils/time';
 
 const statusColors: Record<string, string> = {
   assigned:    'bg-blue-100 text-blue-700',
@@ -19,11 +20,6 @@ const nextStatus: Record<string, { value: string; label: string; color: string; 
   in_progress: { value: 'completed', label: 'Complete Trip',  color: 'bg-green-600 hover:bg-green-700',  requiresKm: true  },
   en_route:    { value: 'completed', label: 'Complete Trip',  color: 'bg-green-600 hover:bg-green-700',  requiresKm: true  },
   completed:   null,
-};
-
-const formatTime = (iso: string) => {
-  if (!iso) return '—';
-  return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
 
 export const DriverTrips = () => {

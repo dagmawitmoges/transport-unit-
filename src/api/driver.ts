@@ -10,7 +10,6 @@ export const getDriverTrips = async () => {
 
     const requester  = included.find((i: any) => i.type === 'user'       && i.id === requesterId);
     const department = included.find((i: any) => i.type === 'department' && i.id === departmentId);
-
     return {
       id: item.id,
       ...item.attributes,

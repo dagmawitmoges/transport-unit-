@@ -9,7 +9,7 @@ export const Topbar = () => {
       <div className="h-full px-8 flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <User size={20} className="text-gray-600" />
-          <span className="text-gray-700 font-medium">{user?.full_name}</span>
+          <span className="text-gray-700 font-medium">{user ? `${user.first_name} ${user.last_name}` : ''}</span>
           <span className="text-sm text-gray-500">({user?.role})</span>
         </div>
 
