@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { StaffLayout } from '../../layout/stafflayouts';
 import { getMyTransportRequests, cancelTransportRequest } from '../../api/transportrequests';
 import { Button } from '../../components/button';
-import { Loader2, PlusCircle, ShieldAlert, X, MapPin, Calendar, Clock, Users } from 'lucide-react';
+import { Loader2, PlusCircle, ShieldAlert, X } from 'lucide-react';
 
 const statusColors: Record<string, string> = {
   pending:     'bg-yellow-100 text-yellow-700',

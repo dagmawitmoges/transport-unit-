@@ -7,7 +7,6 @@ import { StaffLayout } from '../../layout/stafflayouts';
 import { createTransportRequest } from '../../api/transportrequests';
 import { getDepartments } from '../../api/users';
 import { useAuth } from '../../auth/authContext';
-import { Input } from '../../components/input';
 import { Button } from '../../components/button';
 import { Loader2 } from 'lucide-react';
 
